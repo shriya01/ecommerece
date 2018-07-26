@@ -126,41 +126,12 @@ echo form_dropdown('shirts', $options, $shirts_on_sale, $js );
 			</div>
 
 
-    <div class="form-group">
-            <label class="radio-inline" >
-     <?php  $data = array(
-        'name'          => 'gender',
-        'id'            => 'male',
-        'value'         => '1',
-        'checked'       => isset($gender)&&$gender == '1'? TRUE:FALSE,
+    <?php echo form_open_multipart('upload/do_upload');?>
 
-);
+<input type="file" value="product image" name="userfile" size="20" />
 
-echo form_radio($data); ?>Male
-    </label>
-    <label class="radio-inline">
-           <?php  $data = array(
-        'name'          => 'gender',
-        'id'            => 'female',
-        'value'         => '2',
-        'checked'       => isset($gender)&&$gender == '2'? TRUE:FALSE,
 
-);
-
-echo form_radio($data); ?>Female
-    </label>
-    <label class="radio-inline">
-           <?php  $data = array(
-        'name'          => 'gender',
-        'id'            => 'others',
-        'value'         => '3',
-        'checked'       => isset($gender)&&$gender == '3'? TRUE:FALSE,
-
-);
-
-echo form_radio($data); ?>Others
-    </label>
-</div>
+<input type="submit" value="upload" />
        
 			<hr>
 			<div class="row">

@@ -58,12 +58,12 @@ public function addOrUpdateProduct($product_id = '')
             if ($product_id=='') {
                 $table_name = "products";
                 $password = $this->input->post('password');
-                $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'ip_address'=>$ip_address,'user_gender'=>$gender ,'prodect_selling_price'=>$prodectsellingprice];
+                $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'ip_address'=>$ip_address,'prodect_selling_price'=>$prodectsellingprice];
                 $this->productModel->insert($table_name, $insert_array);
                 redirect('user/');
             } else {
                 $table_name = "products";
-                $update_array = ['product_name' => $productname,'product_description'=>$productdescription, 'product_price'=>$productprice,'product_discount' => $productdiscount,'ip_address'=>$ip_address,'user_gender'=>$gender ,'prodect_selling_price'=>$prodectsellingprice];
+                $update_array = ['product_name' => $productname,'product_description'=>$productdescription, 'product_price'=>$productprice,'product_discount' => $productdiscount,'ip_address'=>$ip_address,'prodect_selling_price'=>$prodectsellingprice];
                 $where_array = array('product_id' => aes256decrypt($product_id));
                 $product_id = aes256decrypt($product_id);
                 if ($is_unique_email = $this->productModel->is_unique_email($product_price, $product_id)) {
@@ -77,55 +77,30 @@ public function addOrUpdateProduct($product_id = '')
         }
     }
 
-      public function InsertProduct()
-  {
-	  $this->form_validation->set_rules('product_name', ' product name', 'trim|required|min_length[4]');
-    $this->form_validation->set_rules('product_description', 'product description');
-    $this->form_validation->set_rules('product_price', 'product price', 'trim|required');
-    $this->form_validation->set_rules('product_discount', 'product discount', 'trim|required');
-    $this->form_validation->set_rules('prodect_selling_price', 'prodect selling price', 'trim|required|min_length[4]|max_length[32]');
-     $this->form_validation->set_rules('category_name', ' category name', 'trim|required|min_length[4]');
-    
-    
-    $this->form_validation->set_error_delimiters('<div class="error-msg">', '</div>');
-    
-    if ($this->form_validation->run() == FALSE)
-    {
-      $this->load->view('product_view');
-    }
-    else
-    {
-      $ProductName  = $this->security->xss_clean($this->input->post('product_name'));
-      $ProductDescription  = $this->security->xss_clean($this->input->post('product_description'));
-      $ProductPrice   = $this->security->xss_clean($this->input->post('product_price'));
-      $ProductDiscount    = $this->security->xss_clean($this->input->post('product_discount'));
-      $ProdectSellingPrice   = $this->security->xss_clean($this->input->post('prodect_selling_price'));
-      $CategoryName  = $this->security->xss_clean($this->input->post('category_name'));
-      
-      $insertData = array('product_name'=>$ProductName,'product_description'=>$ProductDescription,
-                'product_price'=>$ProductPrice,
-                'product_discount'=>$ProductDiscount,
-                'prodect_selling_price'=>$ProdectSellingPrice, 'category_name'=>$CategoryName);
-      $checkDuplicate = $this->ProductModel->checkDuplicate($ProductName);
-      
-      if($checkDuplicate == 0)
-      {
-        $insertData = $this->ProductModel->insertData($insertData);
-      
-        if($insertData)
+    public function do_upload()
         {
-          redirect('product/productlist');
-        }
-        else
-        {
-          $data['errorMsg'] = 'Unable to save product. Please try again';
-          $this->load->view('product_view',$data);
-        }
-      }
-      
-    }
-  }
+                $config['upload_path']          = './uploads/';
+                $config['allowed_types']        = 'gif|jpg|png';
+                $config['max_size']             = 100;
+                $config['max_width']            = 1024;
+                $config['max_height']           = 768;
 
+                $this->load->library('upload', $config);
+
+                if ( ! $this->upload->do_upload('userfile'))
+                {
+                        $error = array('error' => $this->upload->display_errors());
+
+                        $this->load->view('upload_form', $error);
+                }
+                else
+                {
+                        $data = array('upload_data' => $this->upload->data());
+
+                        $this->load->view('upload_success', $data);
+                }
+        } 
+     
   /**
      * @DateOfCreation     25-July-2018
      * @DateOfDeprecated
