@@ -16,8 +16,12 @@ class Admin extends MX_Controller
     {
         $this->load->helper(array('url','encryption'));
         $this->load->database();
-        $this->load->library('session');
+        $this->load->library(array('session'));
         $this->load->model('Admin_Model');
+    }
+    function success()
+    {
+        echo "mail sent";
     }
     /**
      * @DateOfCreation     25-July-2018
@@ -103,10 +107,34 @@ class Admin extends MX_Controller
     public function forgotPassword()
     {
          if (isset($this->session->admin_email)) {    
-            redirect('admin');
+            redirect('admin/home');
         } else {
-             echo "forgot password";
-        }
+           
+    $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    $pass = array(); //remember to declare $pass as an array
+    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+    for ($i = 0; $i < 5; $i++) {
+        $n = rand(0, $alphaLength);
+        $pass[] = $alphabet[$n];
+    }
+    $password = implode($pass); //turn the array into a string
+
+$this->load->library('email');
+$this->email->set_newline("\r\n");
+$this->email->from('jain.shriya@fxbytes.com', 'sender shriya');
+$this->email->to('jain.shriya@fxbytes.com');
+$this->email->cc('jain.shriya@fxbytes.com');
+$this->email->bcc('jain.shriya@fxbytes.com');
+
+$this->email->subject('Email Test');
+$this->email->message('Hi Its Your New password '." :-    ".$password."  ."."You can update it anytime according to your convience thank you");
+
+  if($this->email->send())
+     {
+      redirect('/admin');
+     }
+
+   }
     }
   
 }
