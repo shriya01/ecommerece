@@ -19,7 +19,7 @@ class Home extends MX_Controller
      */
     public function index()
     {
-        
+
             $data['title'] = "HOME";
 
           $this->load->view('includes/header',$data);
@@ -29,7 +29,7 @@ class Home extends MX_Controller
         
             $this->load->view('shop', $data);
             $this->load->view('footer');
-        
+
     }
 
 

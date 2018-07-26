@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `payment_method` (
   PRIMARY KEY (`payment_method_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Stores payment method related information' AUTO_INCREMENT=6 ;
 
+
 -- --------------------------------------------------------
 
 --
@@ -88,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   PRIMARY KEY (`product_id`),
   KEY `category_id` (`category_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
 
 -- --------------------------------------------------------
 
@@ -111,6 +113,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`user_id`),
   KEY `user_type_id` (`user_type_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+
 -- --------------------------------------------------------
 
 --
@@ -127,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `user_type` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Stores user type related information' AUTO_INCREMENT=3 ;
 
 --
+
 -- Constraints for dumped tables
 --
 
