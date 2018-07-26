@@ -14,14 +14,19 @@ class Home extends MX_Controller
     }
     public function index()
     {
-       echo "this is index";
+        $data['title'] = 'Home Page';
+        if (isset($this->session->user_email)) {
+            $this->load->view('header', $data);
+            $this->load->view('navigation');
+           
+        }
     }
     public function register()
     {
-        $data['title'] = 'Registration Form';
+       $data['title'] = 'Registration Form';
 
         if ($this->registerValidate() == false) {
-            $this->load->view('header', $data);
+            $this->load->view('includes/header',$data);
             $this->load->view('registerform');
             $this->load->view('footer');
         } else {
@@ -70,26 +75,27 @@ class Home extends MX_Controller
     */
     public function login()
     {
-    	$data['title'] = 'User Login Form';
+        $data['title'] = 'User Login Form';
         if ($this->loginValidate() == false) {
-           $this->load->view('header', $data);
-           $this->load->view('loginform');
+            $this->load->view('header', $data);
+            $this->load->view('loginform');
+            $this->load->view('footer');
         } else {
             $email = $this->input->post('email');
             $password = sha1($this->input->post('password'));
-                //Calling is_valid_user function from Pms_model class by providing email and password fetched from post array
-                if ($user_valid=$this->Home_Model->isValidUser($email, $password)) {
-                    //If is_valid_user function returns true saving data to userdata array
-                    $userdata=array('user_email'=>$email,'password'=>$password);
-                    //assigning userdata array to session variable by calling set_userdata method of session class to allow backward compatiblity
-                    $this->session->set_userdata($userdata);
-                    //redirecting to home
-                    redirect('home/index', 'refresh');
-                } else {
-                    // Set message
-                    $this->session->set_flashdata('loginFailed', 'Email Or Password Is Incorrect');
-                    redirect('home/login');
-                }
+            //Calling is_valid_user function from Pms_model class by providing email and password fetched from post array
+            if ($user_valid=$this->Home_Model->isValidUser($email, $password)) {
+                //If is_valid_user function returns true saving data to userdata array
+                $userdata=array('user_email'=>$email,'password'=>$password);
+                //assigning userdata array to session variable by calling set_userdata method of session class to allow backward compatiblity
+                $this->session->set_userdata($userdata);
+                //redirecting to home
+                redirect('home/index', 'refresh');
+            } else {
+                // Set message
+                $this->session->set_flashdata('loginFailed', 'Email Or Password Is Incorrect');
+                redirect('home/login');
+            }
         }
     }
     /**
@@ -101,7 +107,6 @@ class Home extends MX_Controller
     public function loginValidate()
     {
         if (isset($this->session->user_email)) {
-            redirect('/myaccount', 'refresh');
         } else {
             $this->load->library('form_validation');
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
