@@ -22,7 +22,7 @@
                 echo form_open('', $attributes); ?>
 				<?php  foreach ($product_info as $key) {
                     $productname = 	$key['product_name'];
-                    $productdescription =    $key['product_description'];
+                    $productdescription = $key['product_description'];
                     $productprice = 	$key['product_price'];
                     $productdiscount = 	$key['product_discount'];
                     $prodectsellingprice = $key['prodect_selling_price'];

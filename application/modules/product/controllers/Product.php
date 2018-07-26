@@ -57,22 +57,17 @@ public function addOrUpdateProduct($product_id = '')
             $prodectcategory = $this->input->post('product_category_name');
             if ($product_id=='') {
                 $table_name = "products";
-                $password = $this->input->post('password');
                 $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'ip_address'=>$ip_address,'prodect_selling_price'=>$prodectsellingprice];
                 $this->productModel->insert($table_name, $insert_array);
-                redirect('user/');
+                redirect('product/');
             } else {
                 $table_name = "products";
                 $update_array = ['product_name' => $productname,'product_description'=>$productdescription, 'product_price'=>$productprice,'product_discount' => $productdiscount,'ip_address'=>$ip_address,'prodect_selling_price'=>$prodectsellingprice];
                 $where_array = array('product_id' => aes256decrypt($product_id));
                 $product_id = aes256decrypt($product_id);
-                if ($is_unique_email = $this->productModel->is_unique_email($product_price, $product_id)) {
+              
                     $this->productModel->update($table_name, $update_array, $where_array);
-                    redirect('user/');
-                } else {
-                    $this->session->set_flashdata('error', 'Email Already Exists');
-                    redirect('user/addOrUpdateData/'.aes256encrypt($product_id));
-                }
+                    redirect('product/');
             }
         }
     }
@@ -100,7 +95,7 @@ public function addOrUpdateProduct($product_id = '')
                         $this->load->view('upload_success', $data);
                 }
         } 
-     
+
   /**
      * @DateOfCreation     25-July-2018
      * @DateOfDeprecated
@@ -125,11 +120,18 @@ public function addOrUpdateProduct($product_id = '')
      * @LongDescription
      */
 
+ 
     public function validateProductData($product_id)
     {
         if (isset($this->session->admin_email)) {
             $this->load->library('form_validation');
-            $this->form_validation->set_rules('name', 'Product Name', 'required');
+            $this->form_validation->set_rules('productname', 'Product Name', 'required');
+            $this->form_validation->set_rules('productdescription', 'product description', 'required');
+            $this->form_validation->set_rules('productprice', 'product price', 'required');
+            $this->form_validation->set_rules('productdiscount', 'product discount', 'required');
+            $this->form_validation->set_rules('prodectsellingprice', 'prodect selling price', 'required');
+            $this->form_validation->set_rules('prodectcategory', 'prodect category', 'required');
+
             if ($this->form_validation->run() == false) {
                 return false;
             } else {
@@ -161,7 +163,7 @@ public function deleteProductData($product_id = '')
     public function showProductData($product_id = '')
     {
         if (isset($this->session->admin_email)) {
-            $array = array('product_id','product_name');
+            $array = array('product_id','product_name','product_description','product_price','product_discount','prodect_selling_price');
             $table_name = "products";
             $where_array = array('product_id' => aes256decrypt($product_id) );
             $data['product_info'] = $this->ProductModel->select($array, $table_name, $where_array);

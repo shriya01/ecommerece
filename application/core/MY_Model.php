@@ -85,6 +85,34 @@ class MY_Model extends CI_Model
             }
         }
     }
+
+    public function is_unique_product($product_name, $product_id)
+    {
+        $this->db->select('product_name');
+        $this->db->where('product_name', $product_name);
+        $this->db->where('product_id', $product_id);
+        $query = $this->db->get('products');
+        $result_array = $query->result_array();
+        if ($query->num_rows()>0) {
+            //if user product_name and new product_name is same or not modified returns true
+            foreach ($result_array as $key) {
+                # code...
+                if ($key['product_name'] == $product_name) {
+                    return true;
+                }
+            }
+        } else {
+            $this->db->select('product_name');
+            $this->db->where('product_name', $product_name);
+            $query = $this->db->get('products');
+            //if product_name exists and belongs to someone else account return false
+            if ($query->num_rows()>0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
     /**
     * [get_joins description]
     * @param  [type] $table   [description]
@@ -102,31 +130,8 @@ class MY_Model extends CI_Model
         }
         return $this->db->get()->result_array();
     }
-    function checkDuplicate($product_name)
-    {
-        $this->load->database();
-        $this->db->select('product_name');
-        $this->db->from('products');
-        $this->db->like('product_name', $product_name);
-        return $this->db->count_all_results();
-    }
-    /**
-    * Update data into database
-    * @param  string $data
-    * 
-    */
- function insertData($data)
-    {
-        $this->load->database();
-        if($this->db->insert('products', $data))
-        {
-            return  $this->db->insert_id();
-        }
-        else
-        {
-            return false;
-        }
-    }
+    
+ 
 
 /**
     * get product from data base data into database
@@ -174,14 +179,4 @@ class MY_Model extends CI_Model
         }
     }
 
-/**
-    * delete data from table data into database
-    * @param  string $data
-    * 
-    */
-  public function delete_product($product_id)
-    {
-        $this->db->where('product_id', $product_id);
-        return $this->db->delete('products');
-    }
 }
