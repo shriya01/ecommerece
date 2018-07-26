@@ -14,7 +14,7 @@
 					<?php
                 } else {
                     ?>
-					<h2>Add New Account</small></h2>
+					<h2>Add New product</small></h2>
 					<?php
                 } ?>
 				<hr class="colorgraph">
@@ -73,7 +73,7 @@
                     echo form_input($productprice);
                     ?>
 				</div>
-				<?php if ($user_id == ''):
+				<?php if ($product_id == ''):
                 ?>
 				<!-- Password Field -->
 				<div class="form-group">

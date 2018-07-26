@@ -35,6 +35,7 @@ class Home extends MX_Controller
             $gender = $this->input->post('gender');
             $insert_array = [ 'user_firstname' => $firstname,'user_lastname'=>$lastname, 'user_email' => $email,'user_password' => sha1($password),'user_mobile' => $mobileNumber ,'ip_address'=>$ip_address];
             $this->Home_Model->insert($table_name, $insert_array);
+            redirect('home/');
         }
     }
     /**

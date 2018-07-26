@@ -7,7 +7,7 @@ class Product extends MX_Controller
   $this->load->model('ProductModel');
   $this->load->library(array('form_validation','session'));
   $this->load->helper(array('url','html','form','encryption'));
-  $this->load->database();
+
 	}
 	/**
      * @DateOfCreation     25-July-2018
@@ -19,8 +19,8 @@ class Product extends MX_Controller
 public function index()
     {
        
-        $table_name = "users";
-        $array = array('product_name','product_description','product_price','user_gender','product_discount','prodect_selling_price');
+        $table_name = "products";
+        $array = array('product_id','product_name','product_description','product_price','product_discount','prodect_selling_price');
         $where_array=array('is_deleted'=>1);
         $data['product_info'] = $this->ProductModel->select($array, $table_name, $where_array);
         $data['title']="product Information";
@@ -29,22 +29,22 @@ public function index()
         $this->load->view('footer');
     }
 
-public function addOrUpdateData($product_id = '')
+public function addOrUpdateProduct($product_id = '')
     {
          $ip_address = $_SERVER['REMOTE_ADDR'];
         $this->load->helper('form');
         $data['product_id'] = $product_id;
-        $data['user_info'] = [];
+        $data['product_info'] = [];
         if ($product_id != '') {
             $data['title']="Update Product";
-            $array = array('product_id','product_name','product_description','product_price','user_gender','product_discount','prodect_selling_price');
+            $array = array('product_id','product_name','product_description','product_price','product_discount','prodect_selling_price');
             $table_name = "products";
             $where_array = array('product_id' => aes256decrypt($product_id));
-            $data['user_info'] = $this->productModel->select($array, $table_name, $where_array);
+            $data['product_info'] = $this->ProductModel->select($array, $table_name, $where_array);
         } else {
             $data['title'] = 'Add Product';
         }
-        if ($this->validateUserData($product_id) == false) {
+        if ($this->validateProductData($product_id) == false) {
             $this->load->view('header', $data);
             $this->load->view('addOrUpdateProduct', $data);
             $this->load->view('footer');
@@ -53,16 +53,16 @@ public function addOrUpdateData($product_id = '')
             $productdescription = $this->input->post('product_description');
             $productprice = $this->input->post('product_price');
             $productdiscount = $this->input->post('product_discount');
-             $prodectsellingprice = $this->input->post('prodect_selling_price');
-            $gender = $this->input->post('gender');
+            $prodectsellingprice = $this->input->post('prodect_selling_price');
+            $prodectcategory = $this->input->post('product_category_name');
             if ($product_id=='') {
-                $table_name = "users";
+                $table_name = "products";
                 $password = $this->input->post('password');
                 $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'ip_address'=>$ip_address,'user_gender'=>$gender ,'prodect_selling_price'=>$prodectsellingprice];
                 $this->productModel->insert($table_name, $insert_array);
                 redirect('user/');
             } else {
-                $table_name = "users";
+                $table_name = "products";
                 $update_array = ['product_name' => $productname,'product_description'=>$productdescription, 'product_price'=>$productprice,'product_discount' => $productdiscount,'ip_address'=>$ip_address,'user_gender'=>$gender ,'prodect_selling_price'=>$prodectsellingprice];
                 $where_array = array('product_id' => aes256decrypt($product_id));
                 $product_id = aes256decrypt($product_id);
@@ -150,7 +150,7 @@ public function addOrUpdateData($product_id = '')
      * @LongDescription
      */
 
-    public function validateCategoryData($product_id)
+    public function validateProductData($product_id)
     {
         if (isset($this->session->admin_email)) {
             $this->load->library('form_validation');

@@ -10,7 +10,7 @@
     <h4>Display Records of Existing product </h4>
     <table class="table table-bordered">
      <tr>
-      <td><strong>Product Id</strong></td>
+   
       <td><strong>Product Name</strong></td>
       <td><strong>product description</strong></td>
       <td><strong>product price</strong></td>
@@ -23,7 +23,7 @@
 	
 	 foreach ($product_info as $row)  
 	 {?>
-     <tr> <td><?php echo $row['product_id'];?></td>
+     <tr> 
       <td><?php echo $row['product_name'];?></td>
       <td><?php echo  $row['product_description'];?></td>
       <td><?php echo $row['product_price'];?></td>
