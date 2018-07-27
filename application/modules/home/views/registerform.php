@@ -69,7 +69,6 @@
                         'id'            => 'male',
                         'value'         => '1',
                         'checked'       => isset($gender)&&$gender == '1'? true:false,
-
                         );
                         echo form_radio($data); ?>Male
                     </label>
@@ -79,7 +78,6 @@
                             'id'            => 'female',
                             'value'         => '2',
                             'checked'       => isset($gender)&&$gender == '2'? true:false,
-
                             );
                             echo form_radio($data); ?>Female
                         </label>
@@ -93,7 +91,6 @@
                                 echo form_radio($data); ?>Others
                             </label>
                             <?php echo form_submit('register', 'Register', ['class' => 'col-sm-3 btn btn-primary btn-block btn-sm','id'=>'register']); ?>
-
                             <?php echo form_close(); ?>
                             <a href="<?php echo base_url();?>home/login" class="pull-right">Already have a account ? Login here</a>
                         </div>

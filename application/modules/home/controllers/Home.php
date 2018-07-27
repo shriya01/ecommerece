@@ -25,9 +25,7 @@ class Home extends MX_Controller
           $this->load->view('includes/header',$data);
           $this->load->view('navigation');
  $data['product_info'] = $this->Home_Model->select(['product_id','product_name','product_description','product_price','product_image','product_selling_price'], 'products');
-            
-        
-            $this->load->view('shop', $data);
+                        $this->load->view('shop', $data);
             $this->load->view('footer');
 
     }

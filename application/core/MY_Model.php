@@ -40,7 +40,8 @@ class MY_Model extends CI_Model
     public function update($table_name, $update_array = [], $where_array = [])
     {
         $this->db->where($where_array);
-        return $this->db->update($table_name, $update_array);
+       return  $this->db->update($table_name, $update_array);
+
     }
     /**
     * Delete data from database
@@ -86,6 +87,12 @@ class MY_Model extends CI_Model
         }
     }
 
+    /**
+     * [is_unique_product description]
+     * @param  [type]  $product_name [description]
+     * @param  [type]  $product_id   [description]
+     * @return boolean               [description]
+     */
     public function is_unique_product($product_name, $product_id)
     {
         $this->db->select('product_name');
@@ -128,55 +135,7 @@ class MY_Model extends CI_Model
                 $this->db->join($v['table'], $v['condition'], $v['jointype']);
             }
         }
+
         return $this->db->get()->result_array();
     }
-    
- 
-
-/**
-    * get product from data base data into database
-    * 
-    */
-    function getProduct(){
-        
-  $this->db->select("*");
-  $this->db->from('products');
- // $this->db->where('user_id !=',$user_id);
-  $query = $this->db->get();
-  
-  return $query->result_array();
-  echo ("</pre>");
-  
- }
- public function get_product_by_id($product_id = 0)
-    {
-        if ($product_id === 0)
-        {
-            $query = $this->db->get('products');
-            return $query->result_array();
-        }
- 
-        $query = $this->db->get_where('products', array('product_id' => $product_id));
-        return $query->row_array();
-    }
-    public function set_product($product_id = 0)
-    {
-        $this->load->helper('url');
- 
-        $slug = url_title($this->input->post('product_name'), 'dash', TRUE);
- 
-        $data = array(
-            'title' => $this->input->post('product_name'),
-            'slug' => $slug,
-            'text' => $this->input->post('')
-        );
-        
-        if ($id == 0) {
-            return $this->db->insert('products', $data);
-        } else {
-            $this->db->where('product_id', $product_id);
-            return $this->db->update('products', $data);
-        }
-    }
-
 }
