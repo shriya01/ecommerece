@@ -6,8 +6,6 @@ class Product extends MX_Controller
 		parent::__construct();
   $this->load->model('ProductModel');
   $this->load->library(array('form_validation','session'));
-  $this->load->helper(array('url','html','form','encryption'));
-
 	}
 	/**
      * @DateOfCreation     25-July-2018

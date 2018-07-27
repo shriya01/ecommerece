@@ -10,7 +10,7 @@
                 ?>
 				<?php if ($product_id != '') {
                     ?>
-					<h2>Update Account Details</small></h2>
+					<h2>Update product Details</small></h2>
 					<?php
                 } else {
                     ?>
