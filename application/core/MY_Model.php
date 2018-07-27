@@ -40,7 +40,8 @@ class MY_Model extends CI_Model
     public function update($table_name, $update_array = [], $where_array = [])
     {
         $this->db->where($where_array);
-        return $this->db->update($table_name, $update_array);
+       return  $this->db->update($table_name, $update_array);
+
     }
     /**
     * Delete data from database
@@ -86,6 +87,39 @@ class MY_Model extends CI_Model
         }
     }
     /**
+     * [is_unique_product description]
+     * @param  [type]  $product_name [description]
+     * @param  [type]  $product_id   [description]
+     * @return boolean               [description]
+     */
+    public function is_unique_product($product_name, $product_id)
+    {
+        $this->db->select('product_name');
+        $this->db->where('product_name', $product_name);
+        $this->db->where('product_id', $product_id);
+        $query = $this->db->get('products');
+        $result_array = $query->result_array();
+        if ($query->num_rows()>0) {
+            //if user product_name and new product_name is same or not modified returns true
+            foreach ($result_array as $key) {
+                # code...
+                if ($key['product_name'] == $product_name) {
+                    return true;
+                }
+            }
+        } else {
+            $this->db->select('product_name');
+            $this->db->where('product_name', $product_name);
+            $query = $this->db->get('products');
+            //if product_name exists and belongs to someone else account return false
+            if ($query->num_rows()>0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    /**
     * [get_joins description]
     * @param  [type] $table   [description]
     * @param  [type] $columns [description]
@@ -100,6 +134,39 @@ class MY_Model extends CI_Model
                 $this->db->join($v['table'], $v['condition'], $v['jointype']);
             }
         }
+
         return $this->db->get()->result_array();
     }
+
+ public function get_product_by_id($product_id = 0)
+    {
+        if ($product_id === 0)
+        {
+            $query = $this->db->get('products');
+            return $query->result_array();
+        }
+ 
+        $query = $this->db->get_where('products', array('product_id' => $product_id));
+        return $query->row_array();
+    }
+    public function set_product($product_id = 0)
+    {
+        $this->load->helper('url');
+ 
+        $slug = url_title($this->input->post('product_name'), 'dash', TRUE);
+ 
+        $data = array(
+            'title' => $this->input->post('product_name'),
+            'slug' => $slug,
+            'text' => $this->input->post('')
+        );
+        
+        if ($id == 0) {
+            return $this->db->insert('products', $data);
+        } else {
+            $this->db->where('product_id', $product_id);
+            return $this->db->update('products', $data);
+        }
+    }
+
 }

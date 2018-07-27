@@ -16,21 +16,20 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Products <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="<?php echo base_url('admin/product/AddOrUpdateProduct'); ?>">Add Product</a></li>
-                            <li><a href="<?php echo base_url('admin/product/'); ?>">View All Products</a></li>
+                            <li><a href="<?php echo base_url('product/AddOrUpdateProduct'); ?>">Add Product</a></li>
+                            <li><a href="<?php echo base_url('product/'); ?>">View All Products</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Users <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="<?php echo base_url('admin/addOrUpdateData'); ?>">Add User</a></li>
-                            <li><a href="<?php echo base_url('admin/showuserlist'); ?>">View All Users</a></li>
+                            <li><a href="<?php echo base_url('user/addOrUpdateData'); ?>">Add User</a></li>
+                            <li><a href="<?php echo base_url('user'); ?>">View All Users</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Orders <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Add Order</a></li>
                             <li><a href="#">View All Orders</a></li>
                         </ul>
                     </li>
