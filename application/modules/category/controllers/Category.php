@@ -56,10 +56,7 @@ class Category extends MX_Controller
             }
             if ($this->validateCategoryData($category_id) == false) {
                 $this->load->view('header', $data);
-
-
                 $this->load->view('navigation');
-
                 $this->load->view('addOrUpdateCategory', $data);
                 $this->load->view('footer');
             } else {
