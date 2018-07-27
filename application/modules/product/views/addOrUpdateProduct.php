@@ -18,14 +18,14 @@
                     <?php
                 } ?>
                 <hr class="colorgraph">
-                <?php 	$attributes = array('class' => 'register-form', 'id' => 'adduser','role' => 'form');
+                <?php   $attributes = array('class' => 'register-form', 'id' => 'adduser','role' => 'form');
 
                 echo form_open_multipart('', $attributes);?>
                 <?php  foreach ($product_info as $key) {
-                    $productname = 	$key['product_name'];
+                    $productname =  $key['product_name'];
                     $productdescription = $key['product_description'];
-                    $productprice = 	$key['product_price'];
-                    $productdiscount = 	$key['product_discount'];
+                    $productprice =     $key['product_price'];
+                    $productdiscount =  $key['product_discount'];
                     $prodectsellingprice = $key['product_selling_price'];
                     $category_id = $key['category_id'];
                 }
@@ -36,11 +36,11 @@
                     $productname = array(
                         'name'          => 'product_name',
                         'id'            => 'product_name',
-                        'class'			=> 'form-control input-lg',
+                        'class'         => 'form-control input-lg',
                         'maxlength'     => '100',
-                        'placeholder' 	=> 'Product Name',
-                        'tabindex' 		=> '3',
-                        'value'			=> isset($productname) ? $productname : $this->input->post('product_name')
+                        'placeholder'   => 'Product Name',
+                        'tabindex'      => '3',
+                        'value'         => isset($productname) ? $productname : $this->input->post('product_name')
                         );
                     echo form_input($productname);
                     ?>
@@ -66,11 +66,11 @@
                     $productprice = array(
                         'name'          => 'product_price',
                         'id'            => 'product_price',
-                        'class'			=> 'form-control input-lg',
+                        'class'         => 'form-control input-lg',
                         'maxlength'     => '100',
-                        'placeholder' 	=> 'Product Price',
-                        'tabindex' 		=> '3',
-                        'value'			=> isset($productprice) ? $productprice : $this->input->post('product_price'),
+                        'placeholder'   => 'Product Price',
+                        'tabindex'      => '3',
+                        'value'         => isset($productprice) ? $productprice : $this->input->post('product_price'),
                         );
                     echo form_input($productprice);
                     ?>
@@ -81,11 +81,11 @@
                     $productdiscount = array(
                         'name'          => 'product_discount',
                         'id'            => 'product_discount',
-                        'class'			=> 'form-control input-lg',
+                        'class'         => 'form-control input-lg',
                         'maxlength'     => '100',
-                        'placeholder' 	=> 'product discount',
+                        'placeholder'   => 'product discount',
                         'value'          => isset($productdiscount) ? $productdiscount : $this->input->post('product_discount'),
-                        'tabindex' 		=> '3',
+                        'tabindex'      => '3',
                         );
                     echo form_input($productdiscount);
                     ?>
@@ -96,11 +96,11 @@
                     $prodectsellingprice = array(
                         'name'          => 'product_selling_price',
                         'id'            => 'product_selling_price',
-                        'class'			=> 'form-control input-lg',
+                        'class'         => 'form-control input-lg',
                         'maxlength'     => '100',
-                        'placeholder' 	=> 'prodect selling price',
-                        'tabindex' 		=> '3',
-                        'value'			=> isset($prodectsellingprice) ? $prodectsellingprice : $this->input->post('product_selling_price')
+                        'placeholder'   => 'prodect selling price',
+                        'tabindex'      => '3',
+                        'value'         => isset($prodectsellingprice) ? $prodectsellingprice : $this->input->post('product_selling_price')
                         );
                     echo form_input($prodectsellingprice);
                     ?>

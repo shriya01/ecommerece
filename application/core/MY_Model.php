@@ -86,6 +86,7 @@ class MY_Model extends CI_Model
             }
         }
     }
+
     /**
      * [is_unique_product description]
      * @param  [type]  $product_name [description]
@@ -137,36 +138,4 @@ class MY_Model extends CI_Model
 
         return $this->db->get()->result_array();
     }
-
- public function get_product_by_id($product_id = 0)
-    {
-        if ($product_id === 0)
-        {
-            $query = $this->db->get('products');
-            return $query->result_array();
-        }
- 
-        $query = $this->db->get_where('products', array('product_id' => $product_id));
-        return $query->row_array();
-    }
-    public function set_product($product_id = 0)
-    {
-        $this->load->helper('url');
- 
-        $slug = url_title($this->input->post('product_name'), 'dash', TRUE);
- 
-        $data = array(
-            'title' => $this->input->post('product_name'),
-            'slug' => $slug,
-            'text' => $this->input->post('')
-        );
-        
-        if ($id == 0) {
-            return $this->db->insert('products', $data);
-        } else {
-            $this->db->where('product_id', $product_id);
-            return $this->db->update('products', $data);
-        }
-    }
-
 }
