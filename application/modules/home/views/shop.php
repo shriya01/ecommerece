@@ -7,7 +7,7 @@
 			<!-- Single Product -->
 			<div class="col-12 col-sm-6 col-lg-4">
 				<!-- Product Image -->
-				<img style="width:200px; height:200px;" src="<?php echo $product_info[$i]['product_image']? base_url('assets/frontend/shop/').$product_info[$i]['product_image']:base_url('assets/frontend/images/no-image.png'); ?>" alt="" />
+				<img style="width:200px; height:200px;" src="<?php echo $product_info[$i]['product_image']? base_url('uploads/').$product_info[$i]['product_image']:base_url('assets/frontend/images/no-image.png'); ?>" alt="" />
 				<!-- Product Description -->
 				<div class="product-description">
 					<a >
