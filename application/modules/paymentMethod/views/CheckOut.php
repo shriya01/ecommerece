@@ -1,4 +1,6 @@
-
+<?php
+echo validation_errors(); 
+?>
 <div class="container wrapper">
     <div class="row cart-head">
         <div class="container">
@@ -18,7 +20,7 @@
         </div>
     </div>    
     <div class="row cart-body">
-        <form class="form-horizontal" method="post" action="">
+        <form class="form-horizontal" method="post" action="<?php echo base_url('paymentMethod/validateCheckOutData'); ?>">
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-push-6 col-sm-push-6">
                 <!--REVIEW ORDER-->
                 <div class="panel panel-info">
@@ -97,32 +99,33 @@
                             </div>
                         </div>
                         <div class="form-group">
+                 
                             <div class="col-md-12"><strong>Country:</strong></div>
                             <div class="col-md-12">
-                                <input type="text" class="form-control" name="country" value="" />
+                                <input type="text" class="form-control" id="country" name="country" value="" />
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-6 col-xs-12">
                                 <strong>First Name:</strong>
-                                <input type="text" name="first_name" class="form-control" value="" />
+                                <input type="text" name="first_name" id="first_name" class="form-control" value="" />
                             </div>
-                            <div class="span1"></div>
+                            <div class="form-group"></div>
                             <div class="col-md-6 col-xs-12">
                                 <strong>Last Name:</strong>
-                                <input type="text" name="last_name" class="form-control" value="" />
+                                <input type="text" name="last_name" id="last_name" class="form-control" value="" />
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-12"><strong>Address:</strong></div>
                             <div class="col-md-12">
-                                <input type="text" name="address" class="form-control" value="" />
+                                <input type="text" name="address" id="last_name" class="form-control" value="" />
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-md-12"><strong>City:</strong></div>
                             <div class="col-md-12">
-                                <input type="text" name="city" class="form-control" value="" />
+                                <input type="text" name="city" id="city" class="form-control" value="" />
                             </div>
                         </div>
                         <div class="form-group">

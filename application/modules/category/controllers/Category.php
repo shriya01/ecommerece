@@ -7,7 +7,6 @@ class Category extends MX_Controller
 {
     public function __construct()
     {
-        $this->load->helper(array('url','encryption'));
         $this->load->library('session');
         $this->load->model('Category_Model');
     }

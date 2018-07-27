@@ -6,8 +6,6 @@ class Product extends MX_Controller
 		parent::__construct();
   $this->load->model('ProductModel');
   $this->load->library(array('form_validation','session'));
-  $this->load->helper(array('url','html','form','encryption'));
-
 	}
 	/**
      * @DateOfCreation     25-July-2018
@@ -72,7 +70,7 @@ public function addOrUpdateProduct($product_id = '')
         }
     }
 
-    public function do_upload()
+     public function do_upload()
         {
                 $config['upload_path']          = './uploads/';
                 $config['allowed_types']        = 'gif|jpg|png';
@@ -85,16 +83,18 @@ public function addOrUpdateProduct($product_id = '')
                 if ( ! $this->upload->do_upload('userfile'))
                 {
                         $error = array('error' => $this->upload->display_errors());
+            print_r($error);
 
-                        $this->load->view('upload_form', $error);
+                        $this->load->view('addOrUpdateProduct', $error);
                 }
                 else
                 {
                         $data = array('upload_data' => $this->upload->data());
+            print_r($data);
 
-                        $this->load->view('upload_success', $data);
+                        $this->load->view('addOrUpdateProduct', $data);
                 }
-        } 
+        }
 
   /**
      * @DateOfCreation     25-July-2018

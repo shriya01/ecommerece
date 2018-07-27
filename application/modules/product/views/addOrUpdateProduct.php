@@ -10,7 +10,7 @@
                 ?>
 				<?php if ($product_id != '') {
                     ?>
-					<h2>Update Account Details</small></h2>
+					<h2>Update product Details</small></h2>
 					<?php
                 } else {
                     ?>
@@ -131,7 +131,6 @@ echo form_dropdown('shirts', $options, $shirts_on_sale, $js );
 <input type="file" value="product image" name="userfile" size="20" />
 
 
-<input type="submit" value="upload" />
        
 			<hr>
 			<div class="row">
