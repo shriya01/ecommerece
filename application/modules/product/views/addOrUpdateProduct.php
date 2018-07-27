@@ -131,7 +131,6 @@ echo form_dropdown('shirts', $options, $shirts_on_sale, $js );
 <input type="file" value="product image" name="userfile" size="20" />
 
 
-<input type="submit" value="upload" />
        
 			<hr>
 			<div class="row">
