@@ -136,7 +136,7 @@ echo form_dropdown('shirts', $options, $shirts_on_sale, $js );
 			<div class="row">
 				<div class="col-xs-12 col-md-3">
 					<?php 
-                    echo form_submit('updateUser', 'SAVE', array('class'=>'btn btn-primary btn-lg','tabindex'=>'7'));
+                    echo form_submit('updateUser', 'SAVE','value="upload"', array('class'=>'btn btn-primary btn-lg','tabindex'=>'7'));
                     ?>
 				</div>
 			</div>
