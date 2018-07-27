@@ -3,7 +3,7 @@ class PaymentMethod extends MX_Controller
 {
 	public function __construct()
     {
-        $this->load->helper(array('url','encryption'));
+        $this->load->helper(array('url','encryption','form'));
         $this->load->library('session');
         $this->load->model('PaymentMethod_Model');
     }
@@ -103,6 +103,12 @@ class PaymentMethod extends MX_Controller
         $this->load->view('header', $data);
         $this->load->view('viewSinglePaymentMethodInfo', $data);
         $this->load->view('footer');
+    }
+
+    public function CheckOut()
+    {
+                $this->load->view('header');
+        $this->load->view('CheckOut');
     }
 }
 ?>
