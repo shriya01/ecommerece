@@ -27,7 +27,7 @@ class PaymentMethod extends MX_Controller
      */
     public function AddOrUpdatePaymentMethod($payment_method_id = '')
     {
-    	$this->load->helper('form');
+    	
         $data['payment_method_id'] = $payment_method_id;
         $data['payment_method_info'] = [];
         if ($payment_method_id != '') {
@@ -79,6 +79,34 @@ class PaymentMethod extends MX_Controller
             return true;
         }
     }
+     public function validateCheckOutData()
+    {
+$this->load->library('form_validation');
+    $this->form_validation->set_rules('country', 'country', 'trim|required');
+    $this->form_validation->set_rules('first_name', 'First Name', 'trim|required');
+    $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required');
+    $this->form_validation->set_rules('address', 'address', 'trim|required');
+    $this->form_validation->set_rules('city', 'city', 'trim|required');
+    $this->form_validation->set_rules('state', 'state', 'trim|required');
+     $this->form_validation->set_rules('zip_code', 'zip code', 'trim|required');
+    $this->form_validation->set_rules('phone_number', 'phone number', 'trim|required');
+    $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+    
+    //$this->form_validation->set_error_delimiters('<div class="error-msg">', '</div>');
+
+            if ($this->form_validation->run() == false) 
+            {
+
+                $this->load->view('header');
+                $this->load->view('CheckOut');
+            } 
+            else 
+            {
+                return true;
+            }
+        } 
+        
+    
 
     public function DeletePaymentMethodData($payment_method_id)
     {
@@ -104,6 +132,7 @@ class PaymentMethod extends MX_Controller
         $this->load->view('viewSinglePaymentMethodInfo', $data);
         $this->load->view('footer');
     }
+
 
     public function CheckOut()
     {

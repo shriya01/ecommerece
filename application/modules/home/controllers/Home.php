@@ -7,7 +7,7 @@ class Home extends MX_Controller
 {
     public function __construct()
     {
-        $this->load->helper(array('url','form'));
+        
         $this->load->library(array('session'));
         $this->load->model('Home_Model');
         # code...
