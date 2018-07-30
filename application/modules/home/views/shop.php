@@ -15,10 +15,14 @@
 						<h6><?php echo $product_info[$i]['product_name']; ?></h6>
 					</a>
 					<p class="product-price"><span style="text-decoration: line-through;">&#x20B9; <?php echo $product_info[$i]['product_price']; ?></span>&#x20B9; <?php echo $product_info[$i]['product_selling_price']; ?></p>
+<<<<<<< HEAD
 					
 					
 					<a href="<?php echo base_url('paymentMethod/add'); ?>"><button class="btn btn-default">Add to cart</button></a>
 					
+=======
+					<a href="<?php echo base_url('product/addToCart/').aes256encrypt($product_info[$i]['product_id']); ?>"><button class="btn btn-default">Add to cart</button></a>
+>>>>>>> 049b48de0d4ddb5038cbcc1fd2d678dc081b3332
 				</div>
 			</div>
 			<?php

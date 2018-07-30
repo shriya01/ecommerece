@@ -60,32 +60,28 @@ class Product extends MX_Controller
             $productsellingprice = $this->input->post('product_selling_price');
             $productcategory = $this->input->post('category_name');
             $upload_result =$this->CheckUpload();
-            if($upload_result == false)
-            {
+            if ($upload_result == false) {
                 echo "there is some error in file uplad";
-            }
-            else
-            {
+            } else {
                 $image_name = $upload_result['upload_data']['file_name'];
                 if ($product_id=='') {
-                $table_name = "products";
-                $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
-                $this->ProductModel->insert($table_name, $insert_array);
-                redirect('product/');
+                    $table_name = "products";
+                    $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
+                    $this->ProductModel->insert($table_name, $insert_array);
+                    redirect('product/');
                 } else {
-                $table_name = "products";
-                $update_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
-                $where_array = array('product_id' => $product_id);
-                $this->ProductModel->update($table_name, $update_array, $where_array);
-                redirect('product/');
+                    $table_name = "products";
+                    $update_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
+                    $where_array = array('product_id' => $product_id);
+                    $this->ProductModel->update($table_name, $update_array, $where_array);
+                    redirect('product/');
                 }
             }
-           
         }
     }
     /**
-     * [CheckUpload description]
-     */
+    * [CheckUpload description]
+    */
     public function CheckUpload()
     {
         $config['upload_path']          = './uploads/';
@@ -159,5 +155,41 @@ class Product extends MX_Controller
         } else {
             redirect('admin');
         }
+    }
+    /**
+    * [addToCart description]
+    */
+    public function addToCart($product_id = '')
+    {
+        $this->load->library('cart');
+        $product_id = aes256decrypt($product_id);
+        $product_info = $this->ProductModel->select(['product_image','product_name','product_selling_price'], 'products', ['product_id'=>$product_id]);
+        foreach ($product_info as $key) {
+            $product_name = $key['product_name'];
+            $product_price = $key['product_selling_price'];
+            $product_image = $key['product_image'];
+        }
+        $data = array(
+        'id'      => $product_id,
+        'qty'     => 1,
+        'price'   => $product_price,
+        'name'    => $product_name,
+        'image' => $product_image 
+		);
+		 
+        $result = $this->cart->insert($data);
+          $data['image'] = $product_image;
+        $this->load->view('header');
+        $this->load->view('cart',$data);
+    }
+
+    public function UpdateCart(){
+        echo $this->input->post($i.'[rowid]');
+    }
+    public function destroyCart()
+    {
+        $this->load->library('cart');
+
+        $this->cart->destroy();
     }
 }
