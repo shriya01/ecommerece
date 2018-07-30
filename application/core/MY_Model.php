@@ -15,6 +15,11 @@ class MY_Model extends CI_Model
     * @param  string $table_name
     * @return Result Object
     */
+	function fetch_all()
+ {
+  $query = $this->db->get("products");
+  return $query->result();
+ }
     public function select($array = [], $table_name, $where_array = [])
     {
         $this->db->select($array);

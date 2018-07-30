@@ -15,7 +15,10 @@
 						<h6><?php echo $product_info[$i]['product_name']; ?></h6>
 					</a>
 					<p class="product-price"><span style="text-decoration: line-through;">&#x20B9; <?php echo $product_info[$i]['product_price']; ?></span>&#x20B9; <?php echo $product_info[$i]['product_selling_price']; ?></p>
-					<a href="<?php echo base_url('paymentMethod/AddToCart'); ?>"><button class="btn btn-default">Add to cart</button></a>
+					
+					
+					<a href="<?php echo base_url('paymentMethod/add'); ?>"><button class="btn btn-default">Add to cart</button></a>
+					
 				</div>
 			</div>
 			<?php
