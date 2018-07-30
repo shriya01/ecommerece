@@ -1,34 +1,38 @@
 <?php 
 /**
- * Admin Class
- *
- * @package
- * @subpackage
- * @category
- * @DateOfCreation    25-July-2018
- * @DateOfDeprecated
- * @ShortDescription
- * @LongDescription   This class manages user at admin access level
- */
+* Admin Class
+*
+* @package
+* @subpackage
+* @category
+* @DateOfCreation    25-July-2018
+* @DateOfDeprecated
+* @ShortDescription
+* @LongDescription   This class manages user at admin access level
+*/
 class Admin extends MX_Controller
 {
     public function __construct()
     {
         $this->load->helper(array('url','encryption'));
         $this->load->database();
-        $this->load->library(array('session'));
+        $this->load->library(array('session','form_validation'));
         $this->load->model('Admin_Model');
     }
-    function success()
+    /**
+    * [success description]
+    * @return [type] [description]
+    */
+    public function success()
     {
         echo "mail sent";
     }
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function checks the login credentials and after successful authentication redirects to admin home page
-     * @LongDescription
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function checks the login credentials and after successful authentication redirects to admin home page
+    * @LongDescription
+    */
     public function index()
     {
         //check if admin email session is set or not
@@ -37,8 +41,7 @@ class Admin extends MX_Controller
         } else {
             //Loading The form helper
             $this->load->helper('form');
-            // Initializes the form_validation library class
-            $this->load->library('form_validation');
+    
             //Setting Rules for input fields by calling set_rules method of form_validation library class
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
             $this->form_validation->set_rules('password', 'Password', 'required');
@@ -70,11 +73,11 @@ class Admin extends MX_Controller
         }
     }
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   Displays The Admin Dashboard
-     * @LongDescription
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   Displays The Admin Dashboard
+    * @LongDescription
+    */
     public function home()
     {
         //check if admin email session is set or not
@@ -87,11 +90,11 @@ class Admin extends MX_Controller
         }
     }
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function destroys the current session and redirects to login page
-     * @LongDescription
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function destroys the current session and redirects to login page
+    * @LongDescription
+    */
     public function logout()
     {
         //destroy the session
@@ -99,42 +102,62 @@ class Admin extends MX_Controller
         redirect('admin/');
     }
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   executes the forgot password script
-     * @LongDescription
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   executes the forgot password script
+    * @LongDescription
+    */
     public function forgotPassword()
     {
-         if (isset($this->session->admin_email)) {    
+        if (isset($this->session->admin_email)) {
             redirect('admin/home');
         } else {
+                        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+
+            if($this->form_validation->run() == false)
+            {
+                            $this->load->view('header');
+            $this->load->view('forgotPasswordForm');
+            }
+            else
+            {
+         $email = $this->input->post('email');
+            $this->forgotPasswordHandle($email);
+   
            
-    $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-    $pass = array(); //remember to declare $pass as an array
-    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-    for ($i = 0; $i < 5; $i++) {
-        $n = rand(0, $alphaLength);
-        $pass[] = $alphabet[$n];
+        }
+    }}
+    
+    public function forgotPasswordHandle($email = '')
+    {
+                 $password = $this->generatePassword();
+
+         $this->load->library('email');
+            $this->email->set_newline("\r\n");
+            $this->email->from('jain.shriya@fxbytes.com', 'sender shriya');
+            $this->email->to($email);
+            $this->email->subject('Email Test');
+            $this->email->message('Hi Its Your New password '." :-    ".$password."  ."."You can update it anytime according to your convience thank you");
+            if (!$this->email->send()) {
+     echo 'Failed to send password, please try again!';
+} else {
+   $this->session->set_flashdata('msg','Password sent to your email!');
+}
     }
-    $password = implode($pass); //turn the array into a string
-
-$this->load->library('email');
-$this->email->set_newline("\r\n");
-$this->email->from('jain.shriya@fxbytes.com', 'sender shriya');
-$this->email->to('jain.shriya@fxbytes.com');
-$this->email->cc('jain.shriya@fxbytes.com');
-$this->email->bcc('jain.shriya@fxbytes.com');
-
-$this->email->subject('Email Test');
-$this->email->message('Hi Its Your New password '." :-    ".$password."  ."."You can update it anytime according to your convience thank you");
-
-  if($this->email->send())
-     {
-      redirect('/admin');
-     }
-
-   }
+    /**
+     * [generatePassword description]
+     * @return [type] [description]
+     */
+    public function generatePassword()
+    {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 5; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        $password = implode($pass); //turn the array into a string
+        return $password;
     }
-  
 }
