@@ -143,4 +143,24 @@ class MY_Model extends CI_Model
 
         return $this->db->get()->result_array();
     }
+    public function insert_user($data)
+    {
+        $this->db->insert('users', $data);
+        $id = $this->db->insert_id();
+        return (isset($id)) ? $id : FALSE;      
+    }
+    
+        // Insert order date with customer id in "orders" table in database.
+    public function insert_order($data)
+    {
+        $this->db->insert('orders', $data);
+        $id = $this->db->insert_id();
+        return (isset($id)) ? $id : FALSE;
+    }
+    
+        // Insert ordered product detail in "order_detail" table in database.
+    public function insert_order_detail($data)
+    {
+        $this->db->insert('order_detail', $data);
+    }
 }
