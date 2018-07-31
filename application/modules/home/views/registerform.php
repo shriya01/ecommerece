@@ -59,7 +59,7 @@
                         'placeholder'   => 'Mobile Number',
                         'tabindex'      => '3',
                         'value'         => isset($mobileNumber) ? $mobileNumber : $this->input->post('mobileNumber')
-                        );
+                    );
                     echo form_input($mobileNumber);
                     ?>
                 </div>
@@ -69,31 +69,31 @@
                         'id'            => 'male',
                         'value'         => '1',
                         'checked'       => isset($gender)&&$gender == '1'? true:false,
-                        );
-                        echo form_radio($data); ?>Male
-                    </label>
-                    <label class="radio-inline">
-                        <?php  $data = array(
-                            'name'          => 'gender',
-                            'id'            => 'female',
-                            'value'         => '2',
-                            'checked'       => isset($gender)&&$gender == '2'? true:false,
-                            );
-                            echo form_radio($data); ?>Female
-                        </label>
-                        <label class="radio-inline">
-                            <?php  $data = array(
-                                'name'          => 'gender',
-                                'id'            => 'others',
-                                'value'         => '3',
-                                'checked'       => isset($gender)&&$gender == '3'? true:false,
-                                );
-                                echo form_radio($data); ?>Others
-                            </label>
-                            <?php echo form_submit('register', 'Register', ['class' => 'col-sm-3 btn btn-primary btn-block btn-sm','id'=>'register']); ?>
-                            <?php echo form_close(); ?>
-                            <a href="<?php echo base_url();?>home/login" class="pull-right">Already have a account ? Login here</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                    );
+                    echo form_radio($data); ?>Male
+                </label>
+                <label class="radio-inline">
+                    <?php  $data = array(
+                        'name'          => 'gender',
+                        'id'            => 'female',
+                        'value'         => '2',
+                        'checked'       => isset($gender)&&$gender == '2'? true:false,
+                    );
+                    echo form_radio($data); ?>Female
+                </label>
+                <label class="radio-inline">
+                    <?php  $data = array(
+                        'name'          => 'gender',
+                        'id'            => 'others',
+                        'value'         => '3',
+                        'checked'       => isset($gender)&&$gender == '3'? true:false,
+                    );
+                    echo form_radio($data); ?>Others
+                </label>
+                <?php echo form_submit('register', 'Register', ['class' => 'col-sm-3 btn btn-primary btn-block btn-sm','id'=>'register']); ?>
+                <?php echo form_close(); ?>
+                <a href="<?php echo base_url();?>home/login" class="pull-right">Already have a account ? Login here</a>
+            </div>
+        </div>
+    </div>
+</section>

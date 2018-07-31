@@ -15,6 +15,7 @@
 						<h6><?php echo $product_info[$i]['product_name']; ?></h6>
 					</a>
 					<p class="product-price"><span style="text-decoration: line-through;">&#x20B9; <?php echo $product_info[$i]['product_price']; ?></span>&#x20B9; <?php echo $product_info[$i]['product_selling_price']; ?></p>
+
 					<a href="<?php echo base_url('product/addToCart/').aes256encrypt($product_info[$i]['product_id']); ?>"><button class="btn btn-default">Add to cart</button></a>
 				</div>
 			</div>
