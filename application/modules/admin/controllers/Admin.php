@@ -41,11 +41,9 @@ class Admin extends MX_Controller
         } else {
             //Loading The form helper
             $this->load->helper('form');
-    
             //Setting Rules for input fields by calling set_rules method of form_validation library class
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
             $this->form_validation->set_rules('password', 'Password', 'required');
-
             if ($this->form_validation->run() == false) {
                 $data['title'] = 'Login Page';
                 //Loading login Form with error messages if data is not properly validated
@@ -112,47 +110,42 @@ class Admin extends MX_Controller
         if (isset($this->session->admin_email)) {
             redirect('admin/home');
         } else {
-                        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-
-            if($this->form_validation->run() == false)
-            {
-                            $this->load->view('header');
-            $this->load->view('forgotPasswordForm');
+            $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+            if ($this->form_validation->run() == false) {
+                $this->load->view('header');
+                $this->load->view('forgotPasswordForm');
+            } else {
+                $email = $this->input->post('email');
+                $this->forgotPasswordHandle($email);
             }
-            else
-            {
-         $email = $this->input->post('email');
-            $this->forgotPasswordHandle($email);
-   
-           
         }
-    }}
-    
+    }
     public function forgotPasswordHandle($email = '')
     {
-                 $password = $this->generatePassword();
-
-         $this->load->library('email');
-            $this->email->set_newline("\r\n");
-            $this->email->from('jain.shriya@fxbytes.com', 'sender shriya');
-            $this->email->to($email);
-            $this->email->subject('Email Test');
-            $this->email->message('Hi Its Your New password '." :-    ".$password."  ."."You can update it anytime according to your convience thank you");
-            if (!$this->email->send()) {
-     echo 'Failed to send password, please try again!';
-} else {
-   $this->session->set_flashdata('msg','Password sent to your email!');
-}
+        $password = $this->generatePassword();
+        $this->load->library('email');
+        $this->email->set_newline("\r\n");
+        $this->email->from('jain.shriya@fxbytes.com', 'sender shriya');
+        $this->email->to($email);
+        $this->email->subject('Email Test');
+        $this->email->message('Hi Its Your New password '." :-    ".$password."  ."."You can update it anytime according to your convience thank you");
+        if (!$this->email->send()) {
+            echo 'Failed to send password, please try again!';
+        } else {
+            $this->session->set_flashdata('msg', 'Password sent to your email!');
+        }
     }
     /**
-     * [generatePassword description]
-     * @return [type] [description]
-     */
+    * [generatePassword description]
+    * @return [type] [description]
+    */
     public function generatePassword()
     {
         $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-        $pass = array(); //remember to declare $pass as an array
-        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        //remember to declare $pass as an array
+        $pass = array(); 
+        //put the length -1 in cache
+        $alphaLength = strlen($alphabet) - 1;
         for ($i = 0; $i < 5; $i++) {
             $n = rand(0, $alphaLength);
             $pass[] = $alphabet[$n];
