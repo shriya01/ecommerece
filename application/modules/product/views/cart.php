@@ -99,7 +99,8 @@
                             <?php echo form_close(); ?>
                             
                             <!-- "Place order button" on click send "billing" controller  -->
-                            <input type="button" class ='fg-button teal' value="Place Order" onclick="window.location = 'product/billing_view'">
+                            <a href="<?php echo base_url('product/billing_view'); ?>"> <input type="button" class ='fg-button teal' value="Place Order" ></a>
+                           
                         </td>
                         
                            

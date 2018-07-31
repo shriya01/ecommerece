@@ -236,36 +236,36 @@ function billing_view(){
 }
 public function save_order()
 {
-     $this->load->library('cart');
+    $this->load->library('cart');
 // This will store all values which inserted  from user.
     $user = array(
-        'name'      => $this->input->post('name'),
-        'email'     => $this->input->post('email'),
-        'address'   => $this->input->post('address'),
-        'phone'     => $this->input->post('phone')
+        'user_firstname'      => $this->input->post('name'),
+        'user_email'     => $this->input->post('email'),
+        'user_address'   => $this->input->post('address'),
+        'user_mobile'     => $this->input->post('phone')
     );      
 // And store user imformation in database.
-    $cust_id = $this->billing_model->insert_user($customer);
+    $user_id = $this->ProductModel->insert_user($user);
 
     $order = array(
         'date'          => date('Y-m-d'),
-        'customerid'    => $cust_id
+        'user_id'    => $user_id
     );      
 
-    $ord_id = $this->billing_model->insert_order($order);
+    $ord_id = $this->ProductModel->insert_order($order);
 
     if ($cart = $this->cart->contents()):
         foreach ($cart as $item):
             $order_detail = array(
                 'orderid'       => $ord_id,
-                'productid'     => $item['id'],
+                'product_id'     => $item['id'],
                 'quantity'      => $item['qty'],
                 'price'         => $item['price']
             );      
 
 // Insert product imformation with order detail, store in cart also store in database. 
 
-            $cust_id = $this->billing_model->insert_order_detail($order_detail);
+            $cust_id = $this->ProductModel->insert_order_detail($order_detail);
         endforeach;
     endif;
 
