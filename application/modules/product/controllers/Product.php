@@ -52,6 +52,7 @@ class Product extends MX_Controller
             $this->load->view('header', $data);
             $this->load->view('addOrUpdateProduct', $data);
             $this->load->view('footer');
+            $this->load->view('cs_validation/Product_Validate');
         } else {
             $productname = $this->input->post('product_name');
             $productdescription = $this->input->post('product_description');

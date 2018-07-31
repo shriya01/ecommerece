@@ -18,7 +18,7 @@
                     <?php
                 } ?>
                 <hr class="colorgraph">
-                <?php   $attributes = array('class' => 'register-form', 'id' => 'adduser','role' => 'form');
+                <?php   $attributes = array('class' => 'register-form', 'id' => 'productform','role' => 'form');
 
                 echo form_open_multipart('', $attributes);?>
                 <?php  foreach ($product_info as $key) {
