@@ -50,11 +50,8 @@
                             <td><a href="#" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
                             <td colspan="2" class="hidden-xs"></td>
                             <td class="hidden-xs text-center"><strong>Total <?php echo $this->cart->format_number($this->cart->total()); ?></strong></td>
-<<<<<<< HEAD
                             <td><a href="<?php echo base_url('paymentMethod/CheckOut');?>" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
-=======
                             <td><a href="#" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
->>>>>>> 049b48de0d4ddb5038cbcc1fd2d678dc081b3332
                         </tr>
                     </tfoot>
                 </table>
