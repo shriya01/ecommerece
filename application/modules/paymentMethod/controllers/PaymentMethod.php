@@ -79,27 +79,37 @@ class PaymentMethod extends MX_Controller
             return true;
         }
     }
+    /**
+    * [validateCheckOutData description]
+    * @return [type] [description]
+    */
     public function validateCheckOutData()
     {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('country', 'country', 'trim|required');
         $this->form_validation->set_rules('first_name', 'First Name', 'trim|required');
         $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required');
-        $this->form_validation->set_rules('address', 'address', 'trim|required');
         $this->form_validation->set_rules('city', 'city', 'trim|required');
         $this->form_validation->set_rules('state', 'state', 'trim|required');
         $this->form_validation->set_rules('zip_code', 'zip code', 'trim|required');
-        $this->form_validation->set_rules('phone_number', 'phone number', 'trim|required');
-        $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email');
+        $this->form_validation->set_rules('mobile_number', 'phone number', 'trim|required');
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+        $this->form_validation->set_rules('payment_method_name', 'payment_method_name', 'trim|required|is_natural_no_zero', ['is_natural_no_zero' => 'Please Select Payment Method']);
+        if (!isset($this->session->user_id)) {
+            $this->form_validation->set_rules('password', 'Password', 'required');
+            $this->form_validation->set_rules('passconf', 'Confirm Password', 'required|matches[password]');
+        }
+
         if ($this->form_validation->run() == false) {
             return false;
         } else {
             return true;
         }
     }
-
-
-
+    /**
+    * [DeletePaymentMethodData description]
+    * @param [type] $payment_method_id [description]
+    */
     public function DeletePaymentMethodData($payment_method_id)
     {
         $table_name = "payment_method";
@@ -124,19 +134,68 @@ class PaymentMethod extends MX_Controller
         $this->load->view('viewSinglePaymentMethodInfo', $data);
         $this->load->view('footer');
     }
-
-
-    public function CheckOut()
+    /**
+    * [CheckOut description]
+    * @param string $user_id [description]
+    */
+    public function CheckOut($user_id = '')
     {
-        if($this->validateCheckOutData()==false)
-        {
-             $this->load->view('header');
-        $this->load->view('CheckOut');
+        $user_id = $this->session->user_id;
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+        $this->load->helper('form');
+        $data['user_id'] = $user_id;
+        $data['user_info'] = [];
+        if ($user_id != '') {
+            $array = array('user_id','user_firstname','user_lastname','user_email','user_mobile','user_country','user_city','user_zipcode','user_state','user_address');
+            $table_name = "users";
+            $where_array = array('user_id' => aes256decrypt($user_id));
+            $data['user_info'] = $this->PaymentMethod_Model->select($array, $table_name, $where_array);
         }
-        else
-        {
-            print_r($_POST);
+        if ($this->validateCheckOutData()==false) {
+            $payment_methods= $this->PaymentMethod_Model->select(['payment_method_id','payment_method_name'], 'payment_method');
+            foreach ($payment_methods as $row) {
+                $paymentmethods[$row['payment_method_id']] = $row['payment_method_name'];
+                # code...
+            }
+            $data['payment_methods'] = $paymentmethods;
+            $this->load->view('header');
+            $this->load->view('CheckOut', $data);
+        } else {
+            $firstname = $this->input->post('first_name');
+            $lastname = $this->input->post('last_name');
+            $email = $this->input->post('email');
+            $address = $this->input->post('address');
+            $mobile_number = $this->input->post('mobile_number');
+            $country = $this->input->post('country');
+            $state = $this->input->post('state');
+            $city = $this->input->post('city');
+            $zip_Code = $this->input->post('zip_code');
+            if ($user_id == '') {
+                $password = $this->input->post('password');
+            }
+
+            $payment_method = $this->input->post('payment_method_name');
+            if ($user_id=='') {
+                $table_name = "users";
+                $password = $this->input->post('password');
+                $insert_array = [ 'user_firstname' => $firstname,'user_lastname'=>$lastname, 'user_email' => $email,'user_password' => sha1($password),'user_mobile' => $mobile_number ,'ip_address'=>$ip_address,'user_country'=>$country,'user_state' => $state,'user_city' => $city,'user_address'=>$address];
+                $this->PaymentMethod_Model->insert($table_name, $insert_array);
+                $user_id =  $this->db->insert_id();
+                $insert_array = [ 'user_id' => $user_id,'payment_method_id'=>$payment_method,'product_id'=>1];
+                $this->PaymentMethod_Model->insert('order', $insert_array);
+                $this->load->view('header');
+                echo "<div class='alert alert-success'>Your Order Has Been Placed</div>";
+            } else {
+                $table_name = "users";
+                $update_array = ['user_firstname' => $firstname,'user_lastname'=>$lastname, 'user_email'=>$email,'user_mobile' => $mobile_number,'ip_address'=>$ip_address,'user_country'=>$country,'user_state' => $state,'user_city' => $city,'user_address'=>$address];
+                $where_array = array('user_id' => aes256decrypt($user_id));
+                $user_id = aes256decrypt($user_id);
+                $this->PaymentMethod_Model->update($table_name, $update_array, $where_array);
+                $insert_array = [ 'user_id' => $user_id,'payment_method_id'=>$payment_method,'product_id'=>1];
+                $this->PaymentMethod_Model->insert('order', $insert_array);
+                $this->load->view('header');
+                echo "<div class='alert alert-success'>Your Order Has Been Placed</div>";
+            }
         }
-       
     }
 }

@@ -7,7 +7,8 @@ class Home extends MX_Controller
 {
     public function __construct()
     {
-        
+                $this->load->helper(array('url','encryption','form'));
+
         $this->load->library(array('session'));
         $this->load->model('Home_Model');
         # code...
@@ -88,15 +89,21 @@ class Home extends MX_Controller
         $data['title'] = 'User Login Form';
         if ($this->loginValidate() == false) {
             $this->load->view('header', $data);
-            $this->load->view('loginform');
+                        $this->load->view('loginform');
             $this->load->view('footer');
         } else {
             $email = $this->input->post('email');
             $password = sha1($this->input->post('password'));
             //Calling is_valid_user function from Pms_model class by providing email and password fetched from post array
             if ($user_valid=$this->Home_Model->isValidUser($email, $password)) {
+                $selectdata = $this->Home_Model->select(['user_id'],'users',['user_email'=>$email]);
+
+                foreach ($selectdata as $key) {
+                    $user_id = $selectdata[0]['user_id'];
+                    # code...
+                }
                 //If is_valid_user function returns true saving data to userdata array
-                $userdata=array('user_email'=>$email,'password'=>$password);
+                $userdata=array('user_email'=>$email,'password'=>$password,'user_id'=>aes256encrypt($user_id));
                 //assigning userdata array to session variable by calling set_userdata method of session class to allow backward compatiblity
                 $this->session->set_userdata($userdata);
                 //redirecting to home
@@ -127,6 +134,12 @@ class Home extends MX_Controller
                 return true;
             }
         }
+    }
+
+    public function logout()
+    {
+        $this->session->sess_destroy();
+        redirect('home/login');
     }
     
 }
