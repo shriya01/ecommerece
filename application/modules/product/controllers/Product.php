@@ -185,10 +185,53 @@ class Product extends MX_Controller
     public function UpdateCart(){
         echo $this->input->post($i.'[rowid]');
     }
-    public function destroyCart()
-    {
-        $this->load->library('cart');
 
+public function remove($rowid) {
+    $this->load->library('cart');
+// Check rowid value.
+    if ($rowid==="all"){
+// Destroy data which store in  session.
         $this->cart->destroy();
+    }else{
+// Destroy selected rowid in session.
+        $data = array(
+            'rowid'   => $rowid,
+            'qty'     => 0
+        );
+// Update cart data, after cancle.
+        $this->cart->update($data);
     }
+// This will show cancle data in cart.
+    $this->load->view('header');
+    $this->load->view('cart');
+}
+function update_cart(){
+    $this->load->library('cart');
+if(isset($_POST['cart']))
+{
+        // Recieve post values,calcute them and update
+        $cart_info =  $_POST['cart'] ;
+   
+    foreach( $cart_info as $id => $cart)
+    {   
+        $rowid = $cart['rowid'];
+        $price = $cart['price'];
+        $amount = $price * $cart['qty'];
+        $qty = $cart['qty']<=0?1:$cart['qty'];
+        $data = array(
+            'rowid'   => $rowid,
+            'price'   => $price,
+            'amount' =>  $amount,
+            'qty'     => $qty
+        );
+        $this->cart->update($data);
+    }
+}
+    
+    
+
+    $this->load->view('header');
+    $this->load->view('cart');        
+}   
+
 }

@@ -92,6 +92,8 @@ class PaymentMethod extends MX_Controller
         $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required');
         $this->form_validation->set_rules('city', 'city', 'trim|required');
         $this->form_validation->set_rules('state', 'state', 'trim|required');
+                $this->form_validation->set_rules('address', 'address', 'trim|required');
+
         $this->form_validation->set_rules('zip_code', 'zip code', 'trim|required');
         $this->form_validation->set_rules('mobile_number', 'phone number', 'trim|required');
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
@@ -100,12 +102,6 @@ class PaymentMethod extends MX_Controller
             $this->form_validation->set_rules('password', 'Password', 'required');
             $this->form_validation->set_rules('passconf', 'Confirm Password', 'required|matches[password]');
         }
-        $this->form_validation->set_rules('address', 'address', 'trim|required');
-        $this->form_validation->set_rules('city', 'city', 'trim|required');
-        $this->form_validation->set_rules('state', 'state', 'trim|required');
-        $this->form_validation->set_rules('zip_code', 'zip code', 'trim|required');
-        $this->form_validation->set_rules('phone_number', 'phone number', 'trim|required');
-        $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email');
         if ($this->form_validation->run() == false) {
             return false;
         } else {
@@ -146,6 +142,8 @@ class PaymentMethod extends MX_Controller
     */
     public function CheckOut($user_id = '')
     {
+        $this->load->library('cart');
+        $product_details = json_encode($this->cart->contents());
         $user_id = $this->session->user_id;
         $ip_address = $_SERVER['REMOTE_ADDR'];
         $this->load->helper('form');
@@ -186,7 +184,7 @@ class PaymentMethod extends MX_Controller
                 $insert_array = [ 'user_firstname' => $firstname,'user_lastname'=>$lastname, 'user_email' => $email,'user_password' => sha1($password),'user_mobile' => $mobile_number ,'ip_address'=>$ip_address,'user_country'=>$country,'user_state' => $state,'user_city' => $city,'user_address'=>$address];
                 $this->PaymentMethod_Model->insert($table_name, $insert_array);
                 $user_id =  $this->db->insert_id();
-                $insert_array = [ 'user_id' => $user_id,'payment_method_id'=>$payment_method,'product_id'=>1];
+                $insert_array = [ 'user_id' => $user_id,'payment_method_id'=>$payment_method,'product_details'=>$product_details];
                 $this->PaymentMethod_Model->insert('order', $insert_array);
                 $this->load->view('header');
                 echo "<div class='alert alert-success'>Your Order Has Been Placed</div>";
@@ -196,7 +194,7 @@ class PaymentMethod extends MX_Controller
                 $where_array = array('user_id' => aes256decrypt($user_id));
                 $user_id = aes256decrypt($user_id);
                 $this->PaymentMethod_Model->update($table_name, $update_array, $where_array);
-                $insert_array = [ 'user_id' => $user_id,'payment_method_id'=>$payment_method,'product_id'=>1];
+                $insert_array = [ 'user_id' => $user_id,'payment_method_id'=>$payment_method,'product_details'=>$product_details];
                 $this->PaymentMethod_Model->insert('order', $insert_array);
                 $this->load->view('header');
                 echo "<div class='alert alert-success'>Your Order Has Been Placed</div>";
