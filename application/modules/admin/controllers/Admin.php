@@ -41,11 +41,9 @@ class Admin extends MX_Controller
         } else {
             //Loading The form helper
             $this->load->helper('form');
-
             //Setting Rules for input fields by calling set_rules method of form_validation library class
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
             $this->form_validation->set_rules('password', 'Password', 'required');
-
             if ($this->form_validation->run() == false) {
                 $data['title'] = 'Login Page';
                 //Loading login Form with error messages if data is not properly validated
@@ -113,7 +111,6 @@ class Admin extends MX_Controller
             redirect('admin/home');
         } else {
             $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-
             if ($this->form_validation->run() == false) {
                 $this->load->view('header');
                 $this->load->view('forgotPasswordForm');
@@ -123,11 +120,9 @@ class Admin extends MX_Controller
             }
         }
     }
-
     public function forgotPasswordHandle($email = '')
     {
         $password = $this->generatePassword();
-
         $this->load->library('email');
         $this->email->set_newline("\r\n");
         $this->email->from('jain.shriya@fxbytes.com', 'sender shriya');

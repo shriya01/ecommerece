@@ -127,4 +127,4 @@ echo validation_errors('<div class="text-danger text-center">','</div>');
                 <!--CREDIT CART PAYMENT END-->
             </div>
         </form>
-    </div>
+</div>

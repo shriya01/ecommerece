@@ -135,11 +135,15 @@ class Home extends MX_Controller
             }
         }
     }
-
+/**
+ * [logout description]
+ * @return [type] [description]
+ */
     public function logout()
     {
         $this->session->sess_destroy();
         redirect('home/login');
     }
+
     
 }

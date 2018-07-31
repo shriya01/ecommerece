@@ -83,6 +83,7 @@ class PaymentMethod extends MX_Controller
     * [validateCheckOutData description]
     * @return [type] [description]
     */
+
     public function validateCheckOutData()
     {
         $this->load->library('form_validation');
@@ -99,7 +100,12 @@ class PaymentMethod extends MX_Controller
             $this->form_validation->set_rules('password', 'Password', 'required');
             $this->form_validation->set_rules('passconf', 'Confirm Password', 'required|matches[password]');
         }
-
+        $this->form_validation->set_rules('address', 'address', 'trim|required');
+        $this->form_validation->set_rules('city', 'city', 'trim|required');
+        $this->form_validation->set_rules('state', 'state', 'trim|required');
+        $this->form_validation->set_rules('zip_code', 'zip code', 'trim|required');
+        $this->form_validation->set_rules('phone_number', 'phone number', 'trim|required');
+        $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email');
         if ($this->form_validation->run() == false) {
             return false;
         } else {
@@ -173,7 +179,6 @@ class PaymentMethod extends MX_Controller
             if ($user_id == '') {
                 $password = $this->input->post('password');
             }
-
             $payment_method = $this->input->post('payment_method_name');
             if ($user_id=='') {
                 $table_name = "users";
@@ -196,6 +201,7 @@ class PaymentMethod extends MX_Controller
                 $this->load->view('header');
                 echo "<div class='alert alert-success'>Your Order Has Been Placed</div>";
             }
-        }
+        }        
+       
     }
 }
