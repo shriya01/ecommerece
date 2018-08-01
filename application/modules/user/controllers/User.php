@@ -1,8 +1,15 @@
 <?php 
-
 /**
-*
-*/
+ * User Class
+ *
+ * @package
+ * @subpackage
+ * @category
+ * @DateOfCreation    25-July-2018
+ * @DateOfDeprecated
+ * @ShortDescription
+ * @LongDescription   This class manages user CRUD at admin access level
+ */
 class User extends MX_Controller
 {
     public function __construct()
@@ -15,7 +22,7 @@ class User extends MX_Controller
     /**
     * @DateOfCreation     1-July-2018
     * @DateOfDeprecated
-    * @ShortDescription   This function displays the list of all availble user
+    * @ShortDescription   This function displays the list of all availble user whose user type is not admin
     * @LongDescription
     */
     public function index()

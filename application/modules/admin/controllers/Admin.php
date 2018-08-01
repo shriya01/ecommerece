@@ -1,15 +1,15 @@
 <?php 
 /**
-* Admin Class
-*
-* @package
-* @subpackage
-* @category
-* @DateOfCreation    25-July-2018
-* @DateOfDeprecated
-* @ShortDescription
-* @LongDescription   This class manages user at admin access level
-*/
+ * Admin Class
+ *
+ * @package
+ * @subpackage
+ * @category
+ * @DateOfCreation    25-July-2018
+ * @DateOfDeprecated
+ * @ShortDescription
+ * @LongDescription   This class manages user at admin access level
+ */
 class Admin extends MX_Controller
 {
     public function __construct()
@@ -20,19 +20,21 @@ class Admin extends MX_Controller
         $this->load->model('Admin_Model');
     }
     /**
-    * [success description]
-    * @return [type] [description]
-    */
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   This function displays the mail sent message 
+     * @return [type] [description]
+     */
     public function success()
     {
         echo "mail sent";
     }
     /**
-    * @DateOfCreation     25-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   This function checks the login credentials and after successful authentication redirects to admin home page
-    * @LongDescription
-    */
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   This function checks the login credentials and after successful authentication redirects to admin home page
+     * @LongDescription
+     */
     public function index()
     {
         //check if admin email session is set or not
@@ -71,11 +73,11 @@ class Admin extends MX_Controller
         }
     }
     /**
-    * @DateOfCreation     25-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   Displays The Admin Dashboard
-    * @LongDescription
-    */
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Displays The Admin Dashboard
+     * @LongDescription
+     */
     public function home()
     {
         //check if admin email session is set or not
@@ -88,11 +90,11 @@ class Admin extends MX_Controller
         }
     }
     /**
-    * @DateOfCreation     25-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   This function destroys the current session and redirects to login page
-    * @LongDescription
-    */
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   This function destroys the current session and redirects to login page
+     * @LongDescription
+     */
     public function logout()
     {
         //destroy the session
@@ -100,11 +102,11 @@ class Admin extends MX_Controller
         redirect('admin/');
     }
     /**
-    * @DateOfCreation     25-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   executes the forgot password script
-    * @LongDescription
-    */
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   executes the forgot password script
+     * @LongDescription
+     */
     public function forgotPassword()
     {
         if (isset($this->session->admin_email)) {
@@ -116,10 +118,17 @@ class Admin extends MX_Controller
                 $this->load->view('forgotPasswordForm');
             } else {
                 $email = $this->input->post('email');
+                //sends the mail and display response
                 $this->forgotPasswordHandle($email);
             }
         }
     }
+    /**
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   This function handles the forgot password submit event
+     * @param  string $email [description]
+     */
     public function forgotPasswordHandle($email = '')
     {
         $password = $this->generatePassword();
@@ -136,14 +145,16 @@ class Admin extends MX_Controller
         }
     }
     /**
-    * [generatePassword description]
-    * @return [type] [description]
-    */
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   This function generates a random password
+     * @return [string] [generated password]
+     */
     public function generatePassword()
     {
         $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         //remember to declare $pass as an array
-        $pass = array(); 
+        $pass = array();
         //put the length -1 in cache
         $alphaLength = strlen($alphabet) - 1;
         for ($i = 0; $i < 5; $i++) {

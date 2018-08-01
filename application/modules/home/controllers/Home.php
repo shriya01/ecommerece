@@ -1,43 +1,49 @@
 <?php 
-
 /**
-*
-*/
+ * Home Class
+ *
+ * @package
+ * @subpackage
+ * @category
+ * @DateOfCreation    25-July-2018
+ * @DateOfDeprecated
+ * @ShortDescription
+ * @LongDescription   This class implement the login,registration and all other functionality at user access level
+ */
 class Home extends MX_Controller
 {
     public function __construct()
     {
-                $this->load->helper(array('url','encryption','form'));
-
+        $this->load->helper(array('url','encryption','form'));
         $this->load->library(array('session'));
         $this->load->model('Home_Model');
         # code...
     }
-
     /**
-     * [home description]
-     * @return [type] [description]
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   This function displays the shop grid
      */
     public function index()
     {
-
-            $data['title'] = "HOME";
-
-          $this->load->view('includes/header',$data);
-          $this->load->view('navigation');
- $data['product_info'] = $this->Home_Model->select(['product_id','product_name','product_description','product_price','product_image','product_selling_price'], 'products');
-                        $this->load->view('shop', $data);
-            $this->load->view('footer');
-
+        $data['title'] = "HOME";
+        $this->load->view('includes/header', $data);
+        $this->load->view('navigation');
+        $data['product_info'] = $this->Home_Model->select(['product_id','product_name','product_description','product_price','product_image','product_selling_price'], 'products');
+        $this->load->view('shop', $data);
+        $this->load->view('footer');
     }
-
-
+    /**
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   This function implements the registration functionality and insert user to database after successful validation  
+     */
     public function register()
     {
-       $data['title'] = 'Registration Form';
+        $data['title'] = 'Registration Form';
 
         if ($this->registerValidate() == false) {
-            $this->load->view('includes/header',$data);
+            $this->load->view('includes/header', $data);
             $this->load->view('registerform');
             $this->load->view('footer');
         } else {
@@ -55,13 +61,12 @@ class Home extends MX_Controller
         }
     }
     /**
-    * @DateOfCreation     1-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   Validate the user registration form
-    * @LongDescription
-    * @param  string $user_id [User Encrypted Id]
-    * @return [boolean]       [true or false]
-    */
+     * @DateOfCreation     1-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Validate the user registration form
+     * @LongDescription    Apply validation rules and return result
+     * @return [boolean]   [true or false]
+     */
     public function registerValidate()
     {
         $this->load->library('form_validation');
@@ -77,13 +82,11 @@ class Home extends MX_Controller
         }
     }
     /**
-    * @DateOfCreation     1-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   Displays the user login form
-    * @LongDescription
-    * @param  string $user_id [User Encrypted Id]
-    * @return [boolean]       [true or false]
-    */
+     * @DateOfCreation     1-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Displays the user login form, authenticate it and redirect to login after successful authentication
+     * @LongDescription
+     */
     public function login()
     {
         $data['title'] = 'User Login Form';
@@ -97,7 +100,6 @@ class Home extends MX_Controller
             //Calling is_valid_user function from Pms_model class by providing email and password fetched from post array
             if ($user_valid=$this->Home_Model->isValidUser($email, $password)) {
                 $selectdata = $this->Home_Model->select(['user_id'],'users',['user_email'=>$email]);
-
                 foreach ($selectdata as $key) {
                     $user_id = $selectdata[0]['user_id'];
                     # code...
@@ -116,11 +118,12 @@ class Home extends MX_Controller
         }
     }
     /**
-    * @DateOfCreation     16-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   Validate the login form
-    * @LongDescription
-    */
+     * @DateOfCreation     16-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Validate the login form
+     * @LongDescription
+     * @return  [boolean] [true if validation successfully passed or false if validation fails]
+     */
     public function loginValidate()
     {
         if (isset($this->session->user_email)) {
@@ -135,15 +138,14 @@ class Home extends MX_Controller
             }
         }
     }
-/**
- * [logout description]
- * @return [type] [description]
- */
+    /**
+     * @DateOfCreation     16-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   logout user and redirects to login
+     */
     public function logout()
     {
         $this->session->sess_destroy();
         redirect('home/login');
     }
-
-    
 }

@@ -1,31 +1,45 @@
 <?php
+/**
+* PaymentMethod Class
+*
+* @package
+* @subpackage
+* @category
+* @DateOfCreation    25-July-2018
+* @DateOfDeprecated
+* @ShortDescription
+* @LongDescription   This class implement the product CRUD and cart functionality
+*/
 class Product extends MX_Controller
 {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('ProductModel');
+        $this->load->model('Product_Model');
         $this->load->library(array('form_validation','session'));
         $this->load->helper(array('url','html','form','encryption'));
     }
     /**
     * @DateOfCreation     25-July-2018
     * @DateOfDeprecated
-    * @ShortDescription   This function insert all products
+    * @ShortDescription   This function display all products alongwith edit,view and delete link
     * @LongDescription
     */
     public function index()
     {
         $joins = array(array( 'table' => 'category', 'condition' => 'category.category_id = products.category_id', 'jointype' => 'INNER'));
-        $data['product_info'] = $this->ProductModel->get_joins('products', ['product_id','category_name','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
+        $data['product_info'] = $this->Product_Model->get_joins('products', ['product_id','category_name','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
         $data['title']="product Information";
         $this->load->view('header', $data);
         $this->load->view('productlist', $data);
         $this->load->view('footer');
     }
     /**
-    * [addOrUpdateProduct description]
-    * @param string $product_id [description]
+    * @DateOfCreation     1-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   Display form for updating data if id availble otherwise form for data insertion is displayed
+    * @LongDescription
+    * @param string $product_id [encrypted product id ]
     */
     public function addOrUpdateProduct($product_id = '')
     {
@@ -37,13 +51,12 @@ class Product extends MX_Controller
             $data['title']="Update Product";
             $product_id = aes256decrypt($product_id) ;
             $joins = array(array( 'table' => 'category', 'condition' => 'category.category_id = products.category_id where product_id = \''.$product_id.'\'', 'jointype' => 'INNER'));
-            $data['product_info'] = $this->ProductModel->get_joins('products', ['product_id','product_description','products.category_id','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
+            $data['product_info'] = $this->Product_Model->get_joins('products', ['product_id','product_description','products.category_id','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
         } else {
             $data['title'] = 'Add Product';
         }
         if ($this->validateProductData($product_id) == false) {
-            $product_categories= $this->ProductModel->select(['category_id','category_name'], 'category');
-
+            $product_categories= $this->Product_Model->select(['category_id','category_name'], 'category');
             foreach ($product_categories as $row) {
                 $categories[$row['category_id']] = $row['category_name'];
                 # code...
@@ -68,6 +81,7 @@ class Product extends MX_Controller
                 if ($product_id=='') {
                     $table_name = "products";
                     $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
+
                     $this->ProductModel->insert($table_name, $insert_array);
                     redirect('product/');
                 } else {
@@ -81,7 +95,11 @@ class Product extends MX_Controller
         }
     }
     /**
-    * [CheckUpload description]
+    * @DateOfCreation     1-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function check product file uploaded
+    * @LongDescription
+    * @return [array]       [error or success containing the relevant message]
     */
     public function CheckUpload()
     {
@@ -89,8 +107,8 @@ class Product extends MX_Controller
         $config['allowed_types']        = 'gif|jpg|png';
         $this->load->library('upload', $config);
         if (! $this->upload->do_upload('product_image')) {
-            $data['upload_error'] = array('error' => $this->upload->display_errors());
-            return false;
+            $upload_error = array('error' => $this->upload->display_errors());
+            return $data;
         } else {
             $upload_success = array('upload_data' => $this->upload->data());
             return $upload_success;
@@ -100,8 +118,10 @@ class Product extends MX_Controller
     /**
     * @DateOfCreation     25-July-2018
     * @DateOfDeprecated
-    * @ShortDescription   This function update all products
+    * @ShortDescription   This function validated the product data
     * @LongDescription
+    * @param string $product_id [encrypted product id ]
+    * @return  [boolean] [true if validation successfully passed false if fails]
     */
     public function validateProductData($product_id)
     {
@@ -139,18 +159,19 @@ class Product extends MX_Controller
         }
     }
     /**
-    * [showProductData description]
-    * @param  string $product_id [description]
-    * @return [type]             [description]
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function show product data
+    * @LongDescription
+    * @param string $product_id [encrypted product id ]
     */
     public function showProductData($product_id = '')
     {
         if (isset($this->session->admin_email)) {
             $product_id = aes256decrypt($product_id) ;
             $joins = array(array( 'table' => 'category', 'condition' => 'category.category_id = products.category_id where product_id = \''.$product_id.'\'', 'jointype' => 'INNER'));
-            $data['product_info'] = $this->ProductModel->get_joins('products', ['product_id','category_name','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
+            $data['product_info'] = $this->Product_Model->get_joins('products', ['product_id','category_name','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
             $this->load->view('header', $data);
-            $this->load->view('navigation');
             $this->load->view('viewSingleProductInfo', $data);
             $this->load->view('footer');
         } else {
@@ -158,12 +179,18 @@ class Product extends MX_Controller
         }
     }
     /**
-    * [addToCart description]
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function add product data to cart
+    * @LongDescription
+    * @param string $product_id [encrypted product id ]
     */
+
     public function addToCart($product_id = '')
     {
         $this->load->library('cart');
         $product_id = aes256decrypt($product_id);
+
         $product_info = $this->ProductModel->select(['product_image','product_name','product_selling_price'], 'products', ['product_id'=>$product_id]);
         foreach ($product_info as $key) {
             $product_name = $key['product_name'];
@@ -177,61 +204,68 @@ class Product extends MX_Controller
         'name'    => $product_name,
         'image' => $product_image        );
         $result = $this->cart->insert($data);
-          $data['image'] = $product_image;
         $this->load->view('header');
-        $this->load->view('cart',$data);
+        $this->load->view('cart', $data);
     }
 
-    public function UpdateCart(){
-        echo $this->input->post($i.'[rowid]');
-    }
 
-public function remove($rowid) {
-    $this->load->library('cart');
-// Check rowid value.
-    if ($rowid==="all"){
-// Destroy data which store in  session.
-        $this->cart->destroy();
-    }else{
-// Destroy selected rowid in session.
-        $data = array(
+    /**
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function remove product data to cart
+    * @LongDescription
+    * @param string $rowid [cart row id ]
+    */
+    public function remove($rowid)
+    {
+        $this->load->library('cart');
+        // Check rowid value.
+        if ($rowid==="all") {
+            // Destroy data which store in  session.
+            $this->cart->destroy();
+        } else {
+            // Destroy selected rowid in session.
+            $data = array(
             'rowid'   => $rowid,
             'qty'     => 0
-        );
-// Update cart data, after cancle.
-        $this->cart->update($data);
+            );
+            // Update cart data, after cancle.
+            $this->cart->update($data);
+        }
+        // This will show cancle data in cart.
+        $this->load->view('header');
+        $this->load->view('navigation');
+        $this->load->view('cart');
     }
-// This will show cancle data in cart.
-    $this->load->view('header');
-    $this->load->view('cart');
-}
-function update_cart(){
-    $this->load->library('cart');
-if(isset($_POST['cart']))
-{
-        // Recieve post values,calcute them and update
-        $cart_info =  $_POST['cart'] ;
-   
-    foreach( $cart_info as $id => $cart)
-    {   
-        $rowid = $cart['rowid'];
-        $price = $cart['price'];
-        $amount = $price * $cart['qty'];
-        $qty = $cart['qty']<=0?1:$cart['qty'];
-        $data = array(
-            'rowid'   => $rowid,
-            'price'   => $price,
-            'amount' =>  $amount,
-            'qty'     => $qty
-        );
-        $this->cart->update($data);
+    /**
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function update data to cart
+    * @LongDescription
+    */
+    public function update_cart()
+    {
+        $this->load->library('cart');
+        if (isset($_POST['cart'])) {
+            // Recieve post values,calcute them and update
+            $cart_info =  $_POST['cart'] ;
+
+            foreach ($cart_info as $id => $cart) {
+                $rowid = $cart['rowid'];
+                $price = $cart['price'];
+                $amount = $price * $cart['qty'];
+                $qty = $cart['qty']<=0?1:$cart['qty'];
+                $data = array(
+                'rowid'   => $rowid,
+                'price'   => $price,
+                'amount' =>  $amount,
+                'qty'     => $qty
+                );
+                $this->cart->update($data);
+            }
+        }
+        // This will show cancle data in cart.
+        $this->load->view('header');
+        $this->load->view('cart');
     }
-}
-    
-    
-
-    $this->load->view('header');
-    $this->load->view('cart');        
-}   
-
 }
