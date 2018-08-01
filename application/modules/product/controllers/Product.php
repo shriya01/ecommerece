@@ -15,10 +15,12 @@ class Product extends MX_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Product_Model');
+        $this->load->model('ProductModel');
         $this->load->library(array('form_validation','session'));
         $this->load->helper(array('url','html','form','encryption'));
     }
+
+
     /**
     * @DateOfCreation     25-July-2018
     * @DateOfDeprecated
@@ -57,43 +59,36 @@ class Product extends MX_Controller
         }
         if ($this->validateProductData($product_id) == false) {
             $product_categories= $this->Product_Model->select(['category_id','category_name'], 'category');
+
             foreach ($product_categories as $row) {
                 $categories[$row['category_id']] = $row['category_name'];
-                # code...
+
             }
             $data['product_categories'] = $categories;
             $this->load->view('header', $data);
             $this->load->view('addOrUpdateProduct', $data);
             $this->load->view('footer');
             $this->load->view('cs_validation/Product_Validate');
+            
         } else {
-            $productname = $this->input->post('product_name');
-            $productdescription = $this->input->post('product_description');
-            $productprice = $this->input->post('product_price');
-            $productdiscount = $this->input->post('product_discount');
-            $productsellingprice = $this->input->post('product_selling_price');
-            $productcategory = $this->input->post('category_name');
-            $upload_result =$this->CheckUpload();
-            if ($upload_result == false) {
-                echo "there is some error in file uplad";
+            $image_name = $upload_result['upload_data']['file_name'];
+            if ($product_id=='') {
+                $table_name = "products";
+                $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
+                $this->ProductModel->insert($table_name, $insert_array);
+                redirect('product/');
             } else {
-                $image_name = $upload_result['upload_data']['file_name'];
-                if ($product_id=='') {
-                    $table_name = "products";
-                    $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
 
-                    $this->ProductModel->insert($table_name, $insert_array);
-                    redirect('product/');
-                } else {
-                    $table_name = "products";
-                    $update_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
-                    $where_array = array('product_id' => $product_id);
-                    $this->ProductModel->update($table_name, $update_array, $where_array);
-                    redirect('product/');
-                }
+                $table_name = "products";
+                $update_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
+                $where_array = array('product_id' => $product_id);
+                $this->ProductModel->update($table_name, $update_array, $where_array);
+                redirect('product/');
             }
         }
     }
+
+
     /**
     * @DateOfCreation     1-July-2018
     * @DateOfDeprecated
@@ -113,7 +108,10 @@ class Product extends MX_Controller
             $upload_success = array('upload_data' => $this->upload->data());
             return $upload_success;
         }
+
     }
+
+
 
     /**
     * @DateOfCreation     25-July-2018
@@ -137,27 +135,31 @@ class Product extends MX_Controller
             } else {
                 return true;
             }
-        } else {
-            redirect('admin');
-        }
+
+    } else {
+        redirect('admin');
     }
-    /**
-    * @DateOfCreation     25-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   This function delete row from data base
-    * @LongDescription
-    */
-    public function deleteProductData($product_id = '')
-    {
-        if (isset($this->session->admin_email)) {
-            $table_name = "products";
-            $where_array = array('product_id' => aes256decrypt($product_id) );
-            $this->ProductModel->delete($table_name, $where_array);
-            redirect('product/');
-        } else {
-            redirect('admin');
-        }
+}
+/**
+* @DateOfCreation     25-July-2018
+* @DateOfDeprecated
+* @ShortDescription   This function delete row from data base
+* @LongDescription
+*/
+public function deleteProductData($product_id = '')
+{
+    if (isset($this->session->admin_email)) {
+        $table_name = "products";
+        $where_array = array('product_id' => aes256decrypt($product_id) );
+        $this->ProductModel->delete($table_name, $where_array);
+        redirect('product/');
+    } else {
+        redirect('admin');
     }
+}
+
+
+
     /**
     * @DateOfCreation     25-July-2018
     * @DateOfDeprecated
@@ -198,6 +200,7 @@ class Product extends MX_Controller
             $product_image = $key['product_image'];
         }
         $data = array(
+
         'id'      => $product_id,
         'qty'     => 1,
         'price'   => $product_price,
@@ -208,6 +211,57 @@ class Product extends MX_Controller
         $this->load->view('cart', $data);
     }
 
+   
+    
+       
+        function billing_view(){
+            $this->load->library('cart');
+// Load "billing_view".
+            $this->load->view('header');
+            $this->load->view('product/billing_view');
+        }
+        public function save_order()
+        {
+            $this->load->library('cart');
+// This will store all values which inserted  from user.
+            $user = array(
+                'user_firstname'      => $this->input->post('name'),
+                'user_email'     => $this->input->post('email'),
+                'user_address'   => $this->input->post('address'),
+                'user_mobile'     => $this->input->post('phone')
+            );      
+// And store user imformation in database.
+            $user_id = $this->ProductModel->insert_user($user);
+
+            $order = array(
+                'date'          => date('Y-m-d'),
+                'user_id'    => $user_id
+            );      
+
+            $ord_id = $this->ProductModel->insert_order($order);
+
+            if ($cart = $this->cart->contents()):
+                foreach ($cart as $item):
+                    $order_detail = array(
+                        'orderid'       => $ord_id,
+                        'product_id'     => $item['id'],
+                        'quantity'      => $item['qty'],
+                        'price'         => $item['price']
+                    );      
+
+// Insert product imformation with order detail, store in cart also store in database. 
+
+                    $cust_id = $this->ProductModel->insert_order_detail($order_detail);
+                endforeach;
+            endif;
+
+// After storing all imformation in database load "billing_success".
+            $this->load->view('billing_success');
+        
+    
+    $this->load->view('header');
+    $this->load->view('cart');        
+}   
 
     /**
     * @DateOfCreation     25-July-2018
@@ -243,29 +297,29 @@ class Product extends MX_Controller
     * @ShortDescription   This function update data to cart
     * @LongDescription
     */
-    public function update_cart()
-    {
-        $this->load->library('cart');
-        if (isset($_POST['cart'])) {
-            // Recieve post values,calcute them and update
+     function update_cart(){
+            $this->load->library('cart');
+// Recieve post values,calcute them and update
             $cart_info =  $_POST['cart'] ;
-
-            foreach ($cart_info as $id => $cart) {
+            print_r($cart_info);
+            foreach( $cart_info as $id => $cart)
+            {   
                 $rowid = $cart['rowid'];
                 $price = $cart['price'];
                 $amount = $price * $cart['qty'];
-                $qty = $cart['qty']<=0?1:$cart['qty'];
+                $qty = $cart['qty'];
+
                 $data = array(
-                'rowid'   => $rowid,
-                'price'   => $price,
-                'amount' =>  $amount,
-                'qty'     => $qty
+                    'rowid'   => $rowid,
+                    'price'   => $price,
+                    'amount' =>  $amount,
+                    'qty'     => $qty
                 );
+
                 $this->cart->update($data);
             }
-        }
-        // This will show cancle data in cart.
-        $this->load->view('header');
-        $this->load->view('cart');
-    }
+            $this->load->view('header');
+            $this->load->view('cart');        
+        }   
+
 }
