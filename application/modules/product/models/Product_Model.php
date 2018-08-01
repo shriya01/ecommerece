@@ -10,6 +10,6 @@
  * @ShortDescription
  * @LongDescription   Inherits all properties and methods specified in MY_Model class
  */
-class Product_Model extends MY_Model
+class ProductModel extends MY_Model
 {
 }

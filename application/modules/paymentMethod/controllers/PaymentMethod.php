@@ -101,6 +101,7 @@ class PaymentMethod extends MX_Controller
      * @LongDescription
      * @return [boolean]       [true or false]
      */
+
     public function validateCheckOutData()
     {
         $this->load->library('form_validation');
@@ -110,7 +111,6 @@ class PaymentMethod extends MX_Controller
         $this->form_validation->set_rules('city', 'city', 'trim|required');
         $this->form_validation->set_rules('state', 'state', 'trim|required');
         $this->form_validation->set_rules('address', 'address', 'trim|required');
-
         $this->form_validation->set_rules('zip_code', 'zip code', 'trim|required');
         $this->form_validation->set_rules('mobile_number', 'phone number', 'trim|required');
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
@@ -132,6 +132,7 @@ class PaymentMethod extends MX_Controller
      * @LongDescription
      * @param  string $payment_method_id [ Encrypted Payment Method Id]
      */
+
     public function DeletePaymentMethodData($payment_method_id)
     {
         $table_name = "payment_method";

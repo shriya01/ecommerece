@@ -92,14 +92,14 @@ class Home extends MX_Controller
         $data['title'] = 'User Login Form';
         if ($this->loginValidate() == false) {
             $this->load->view('header', $data);
-            $this->load->view('loginform');
+                        $this->load->view('loginform');
             $this->load->view('footer');
         } else {
             $email = $this->input->post('email');
             $password = sha1($this->input->post('password'));
             //Calling is_valid_user function from Pms_model class by providing email and password fetched from post array
             if ($user_valid=$this->Home_Model->isValidUser($email, $password)) {
-                $selectdata = $this->Home_Model->select(['user_id'], 'users', ['user_email'=>$email]);
+                $selectdata = $this->Home_Model->select(['user_id'],'users',['user_email'=>$email]);
                 foreach ($selectdata as $key) {
                     $user_id = $selectdata[0]['user_id'];
                     # code...

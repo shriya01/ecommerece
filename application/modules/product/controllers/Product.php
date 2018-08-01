@@ -1,15 +1,15 @@
 <?php
 /**
- * PaymentMethod Class
- *
- * @package
- * @subpackage
- * @category
- * @DateOfCreation    25-July-2018
- * @DateOfDeprecated
- * @ShortDescription
- * @LongDescription   This class implement the product CRUD and cart functionality
- */
+* PaymentMethod Class
+*
+* @package
+* @subpackage
+* @category
+* @DateOfCreation    25-July-2018
+* @DateOfDeprecated
+* @ShortDescription
+* @LongDescription   This class implement the product CRUD and cart functionality
+*/
 class Product extends MX_Controller
 {
     public function __construct()
@@ -20,11 +20,11 @@ class Product extends MX_Controller
         $this->load->helper(array('url','html','form','encryption'));
     }
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function display all products alongwith edit,view and delete link
-     * @LongDescription
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function display all products alongwith edit,view and delete link
+    * @LongDescription
+    */
     public function index()
     {
         $joins = array(array( 'table' => 'category', 'condition' => 'category.category_id = products.category_id', 'jointype' => 'INNER'));
@@ -35,12 +35,12 @@ class Product extends MX_Controller
         $this->load->view('footer');
     }
     /**
-     * @DateOfCreation     1-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   Display form for updating data if id availble otherwise form for data insertion is displayed
-     * @LongDescription
-     * @param string $product_id [encrypted product id ]
-     */
+    * @DateOfCreation     1-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   Display form for updating data if id availble otherwise form for data insertion is displayed
+    * @LongDescription
+    * @param string $product_id [encrypted product id ]
+    */
     public function addOrUpdateProduct($product_id = '')
     {
         $ip_address = $_SERVER['REMOTE_ADDR'];
@@ -57,7 +57,6 @@ class Product extends MX_Controller
         }
         if ($this->validateProductData($product_id) == false) {
             $product_categories= $this->Product_Model->select(['category_id','category_name'], 'category');
-
             foreach ($product_categories as $row) {
                 $categories[$row['category_id']] = $row['category_name'];
                 # code...
@@ -82,25 +81,26 @@ class Product extends MX_Controller
                 if ($product_id=='') {
                     $table_name = "products";
                     $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
-                    $this->Product_Model->insert($table_name, $insert_array);
+
+                    $this->ProductModel->insert($table_name, $insert_array);
                     redirect('product/');
                 } else {
                     $table_name = "products";
                     $update_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
                     $where_array = array('product_id' => $product_id);
-                    $this->Product_Model->update($table_name, $update_array, $where_array);
+                    $this->ProductModel->update($table_name, $update_array, $where_array);
                     redirect('product/');
                 }
             }
         }
     }
     /**
-     * @DateOfCreation     1-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function check product file uploaded
-     * @LongDescription
-     * @return [array]       [error or success containing the relevant message]
-     */
+    * @DateOfCreation     1-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function check product file uploaded
+    * @LongDescription
+    * @return [array]       [error or success containing the relevant message]
+    */
     public function CheckUpload()
     {
         $config['upload_path']          = './uploads/';
@@ -116,13 +116,13 @@ class Product extends MX_Controller
     }
 
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function validated the product data
-     * @LongDescription
-     * @param string $product_id [encrypted product id ]
-     * @return  [boolean] [true if validation successfully passed false if fails]
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function validated the product data
+    * @LongDescription
+    * @param string $product_id [encrypted product id ]
+    * @return  [boolean] [true if validation successfully passed false if fails]
+    */
     public function validateProductData($product_id)
     {
         if (isset($this->session->admin_email)) {
@@ -142,30 +142,29 @@ class Product extends MX_Controller
         }
     }
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function deletes product data from view
-     * @LongDescription
-     * @param string $product_id [encrypted product id ]
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function delete row from data base
+    * @LongDescription
+    */
     public function deleteProductData($product_id = '')
     {
         if (isset($this->session->admin_email)) {
             $table_name = "products";
             $where_array = array('product_id' => aes256decrypt($product_id) );
-            $this->Product_Model->delete($table_name, $where_array);
+            $this->ProductModel->delete($table_name, $where_array);
             redirect('product/');
         } else {
             redirect('admin');
         }
     }
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function show product data 
-     * @LongDescription
-     * @param string $product_id [encrypted product id ]
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function show product data
+    * @LongDescription
+    * @param string $product_id [encrypted product id ]
+    */
     public function showProductData($product_id = '')
     {
         if (isset($this->session->admin_email)) {
@@ -180,17 +179,19 @@ class Product extends MX_Controller
         }
     }
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function add product data to cart  
-     * @LongDescription
-     * @param string $product_id [encrypted product id ]
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function add product data to cart
+    * @LongDescription
+    * @param string $product_id [encrypted product id ]
+    */
+
     public function addToCart($product_id = '')
     {
         $this->load->library('cart');
         $product_id = aes256decrypt($product_id);
-        $product_info = $this->Product_Model->select(['product_image','product_name','product_selling_price'], 'products', ['product_id'=>$product_id]);
+
+        $product_info = $this->ProductModel->select(['product_image','product_name','product_selling_price'], 'products', ['product_id'=>$product_id]);
         foreach ($product_info as $key) {
             $product_name = $key['product_name'];
             $product_price = $key['product_selling_price'];
@@ -203,28 +204,18 @@ class Product extends MX_Controller
         'name'    => $product_name,
         'image' => $product_image        );
         $result = $this->cart->insert($data);
-        $data['image'] = $product_image;
         $this->load->view('header');
         $this->load->view('cart', $data);
     }
+
+
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function add product data to cart  
-     * @LongDescription
-     * @param string $product_id [encrypted product id ]
-     */
-    public function UpdateCart()
-    {
-        echo $this->input->post($i.'[rowid]');
-    }
-    /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function remove product data to cart  
-     * @LongDescription
-     * @param string $rowid [cart row id ]
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function remove product data to cart
+    * @LongDescription
+    * @param string $rowid [cart row id ]
+    */
     public function remove($rowid)
     {
         $this->load->library('cart');
@@ -247,11 +238,11 @@ class Product extends MX_Controller
         $this->load->view('cart');
     }
     /**
-     * @DateOfCreation     25-July-2018
-     * @DateOfDeprecated
-     * @ShortDescription   This function update data to cart  
-     * @LongDescription
-     */
+    * @DateOfCreation     25-July-2018
+    * @DateOfDeprecated
+    * @ShortDescription   This function update data to cart
+    * @LongDescription
+    */
     public function update_cart()
     {
         $this->load->library('cart');
@@ -273,6 +264,7 @@ class Product extends MX_Controller
                 $this->cart->update($data);
             }
         }
+        // This will show cancle data in cart.
         $this->load->view('header');
         $this->load->view('cart');
     }
