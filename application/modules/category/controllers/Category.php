@@ -1,8 +1,15 @@
 <?php 
-
 /**
-*
-*/
+ * Category Class
+ *
+ * @package
+ * @subpackage
+ * @category
+ * @DateOfCreation    25-July-2018
+ * @DateOfDeprecated
+ * @ShortDescription
+ * @LongDescription   This class manages category at admin access level
+ */
 class Category extends MX_Controller
 {
     public function __construct()
@@ -25,7 +32,6 @@ class Category extends MX_Controller
             $data['category_info'] = $this->Category_Model->select($array, $table_name, $where_array);
             $data['title']="Category List";
             $this->load->view('header', $data);
-            $this->load->view('navigation');
             $this->load->view('categoryList', $data);
         } else {
             redirect('admin');
@@ -42,20 +48,24 @@ class Category extends MX_Controller
     {
         if (isset($this->session->admin_email)) {
             $this->load->helper('form');
+            //get category id from url
             $data['category_id'] = $category_id;
+            //initialize a blank array
             $data['category_info'] = [];
             if ($category_id != '') {
                 $data['title']="Update Category Details";
                 $array = array('category_id','category_name');
                 $table_name = "category";
-                $where_array = array('category_id' => aes256decrypt($category_id));
+                //decrypt the encrypted id passed in url and use it in where condition
+                $where_array = array('category_id' => aes256decrypt($category_id)); 
+                //fetches category info of the specified category
                 $data['category_info'] = $this->Category_Model->select($array, $table_name, $where_array);
             } else {
                 $data['title'] = 'Add Category Details';
             }
+            //checks the category validation and if it return false display view otherwise if category is specified update the category else insert the category
             if ($this->validateCategoryData($category_id) == false) {
                 $this->load->view('header', $data);
-                $this->load->view('navigation');
                 $this->load->view('addOrUpdateCategory', $data);
                 $this->load->view('footer');
             } else {
@@ -133,7 +143,6 @@ class Category extends MX_Controller
             $where_array = array('category_id' => aes256decrypt($category_id) );
             $data['category_info'] = $this->Category_Model->select($array, $table_name, $where_array);
             $this->load->view('header', $data);
-            $this->load->view('navigation');
             $this->load->view('viewSingleCategoryInfo', $data);
             $this->load->view('footer');
         } else {

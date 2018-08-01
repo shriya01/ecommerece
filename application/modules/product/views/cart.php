@@ -1,4 +1,5 @@
 
+
 <script type="text/javascript">
             // To conform clear all data in cart.
             function clear_cart() {
@@ -11,6 +12,7 @@
                 }
             }
         </script>
+
 
 <div class="container">
      <div id="text"> 
@@ -105,7 +107,7 @@
                             <a href="<?php echo base_url('product/billing_view'); ?>"> <input type="button" class ='fg-button teal' value="Place Order" ></a>
                            
                         </td>
-                        
+                        <td><a href="<?php echo base_url('paymentMethod/CheckOut');?>" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
                            
                             
                             

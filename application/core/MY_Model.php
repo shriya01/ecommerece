@@ -25,6 +25,8 @@ public function select($array = [], $table_name, $where_array = [])
     $this->db->select($array);
     $this->db->where($where_array);
     $query = $this->db->get($table_name);
+//return $query;
+
     return $query->result_array();
 }
 /**
