@@ -1,3 +1,4 @@
+
 <script type="text/javascript">
             // To conform clear all data in cart.
             function clear_cart() {
@@ -10,6 +11,7 @@
                 }
             }
         </script>
+
 <div class="container">
      <div id="text"> 
             <?php  $cart_check = $this->cart->contents();
@@ -19,6 +21,7 @@
              echo 'To add products to your shopping cart click on "Add to Cart" Button'; 
              }  ?> </div>
     <table id="cart" class="table table-hover table-condensed">
+
 
                     <thead>
                         <tr>

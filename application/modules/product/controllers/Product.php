@@ -44,9 +44,10 @@ public function addOrUpdateProduct($product_id = '')
     if ($this->validateProductData($product_id) == false) {
         $product_categories= $this->ProductModel->select(['category_id','category_name'], 'category');
 
+
         foreach ($product_categories as $row) {
             $categories[$row['category_id']] = $row['category_name'];
-# code...
+
         }
         $data['product_categories'] = $categories;
         $this->load->view('header', $data);
@@ -62,6 +63,17 @@ public function addOrUpdateProduct($product_id = '')
         $upload_result =$this->CheckUpload();
         if ($upload_result == false) {
             echo "there is some error in file uplad";
+            
+            foreach ($product_categories as $row) {
+                $categories[$row['category_id']] = $row['category_name'];
+
+            }
+            $data['product_categories'] = $categories;
+            $this->load->view('header', $data);
+            $this->load->view('addOrUpdateProduct', $data);
+            $this->load->view('footer');
+            $this->load->view('cs_validation/Product_Validate');
+            
         } else {
             $image_name = $upload_result['upload_data']['file_name'];
             if ($product_id=='') {
@@ -177,99 +189,112 @@ public function addToCart($product_id = '')
         'image' => $product_image 
     );
 
+    
     $result = $this->cart->insert($data);
     $data['image'] = $product_image;
     $this->load->view('header');
     $this->load->view('cart',$data);
 }
-function remove($rowid) {
-    $this->load->library('cart');
 
+    public function UpdateCart(){
+        echo $this->input->post($i.'[rowid]');
+    }
+
+    public function remove($rowid) {
+        $this->load->library('cart');
+    
 // Check rowid value.
-    if ($rowid==="all"){
+        if ($rowid==="all"){
 // Destroy data which store in  session.
-        $this->cart->destroy();
-    }else{
+            $this->cart->destroy();
+        }else{
 // Destroy selected rowid in session.
-        $data = array(
-            'rowid'   => $rowid,
-            'qty'     => 0
-        );
+            $data = array(
+                'rowid'   => $rowid,
+                'qty'     => 0
+            );
 // Update cart data, after cancle.
-        $this->cart->update($data);
-    }
-
+            $this->cart->update($data);
+            
+            
+        }
 // This will show cancle data in cart.
-    $this->load->view('header');
-    $this->load->view('cart');
-}
-
-function update_cart(){
-    $this->load->library('cart');
-// Recieve post values,calcute them and update
-    $cart_info =  $_POST['cart'] ;
-    print_r($cart_info);
-    foreach( $cart_info as $id => $cart)
-    {   
-        $rowid = $cart['rowid'];
-        $price = $cart['price'];
-        $amount = $price * $cart['qty'];
-        $qty = $cart['qty'];
-
-        $data = array(
-            'rowid'   => $rowid,
-            'price'   => $price,
-            'amount' =>  $amount,
-            'qty'     => $qty
-        );
-
-        $this->cart->update($data);
+        $this->load->view('header');
+        $this->load->view('cart');
     }
-    $this->load->view('header');
-    $this->load->view('cart');        
-}   
-function billing_view(){
-    $this->load->library('cart');
+     function update_cart(){
+            $this->load->library('cart');
+// Recieve post values,calcute them and update
+            $cart_info =  $_POST['cart'] ;
+            print_r($cart_info);
+            foreach( $cart_info as $id => $cart)
+            {   
+                $rowid = $cart['rowid'];
+                $price = $cart['price'];
+                $amount = $price * $cart['qty'];
+                $qty = $cart['qty'];
+
+                $data = array(
+                    'rowid'   => $rowid,
+                    'price'   => $price,
+                    'amount' =>  $amount,
+                    'qty'     => $qty
+                );
+
+                $this->cart->update($data);
+            }
+            $this->load->view('header');
+            $this->load->view('cart');        
+        }   
+
+       
+        function billing_view(){
+            $this->load->library('cart');
 // Load "billing_view".
-    $this->load->view('header');
-    $this->load->view('product/billing_view');
-}
-public function save_order()
-{
-    $this->load->library('cart');
+            $this->load->view('header');
+            $this->load->view('product/billing_view');
+        }
+        public function save_order()
+        {
+            $this->load->library('cart');
 // This will store all values which inserted  from user.
-    $user = array(
-        'user_firstname'      => $this->input->post('name'),
-        'user_email'     => $this->input->post('email'),
-        'user_address'   => $this->input->post('address'),
-        'user_mobile'     => $this->input->post('phone')
-    );      
-// And store user imformation in database.
-    $user_id = $this->ProductModel->insert_user($user);
-
-    $order = array(
-        'date'          => date('Y-m-d'),
-        'user_id'    => $user_id
-    );      
-
-    $ord_id = $this->ProductModel->insert_order($order);
-
-    if ($cart = $this->cart->contents()):
-        foreach ($cart as $item):
-            $order_detail = array(
-                'orderid'       => $ord_id,
-                'product_id'     => $item['id'],
-                'quantity'      => $item['qty'],
-                'price'         => $item['price']
+            $user = array(
+                'user_firstname'      => $this->input->post('name'),
+                'user_email'     => $this->input->post('email'),
+                'user_address'   => $this->input->post('address'),
+                'user_mobile'     => $this->input->post('phone')
             );      
+// And store user imformation in database.
+            $user_id = $this->ProductModel->insert_user($user);
+
+            $order = array(
+                'date'          => date('Y-m-d'),
+                'user_id'    => $user_id
+            );      
+
+            $ord_id = $this->ProductModel->insert_order($order);
+
+            if ($cart = $this->cart->contents()):
+                foreach ($cart as $item):
+                    $order_detail = array(
+                        'orderid'       => $ord_id,
+                        'product_id'     => $item['id'],
+                        'quantity'      => $item['qty'],
+                        'price'         => $item['price']
+                    );      
 
 // Insert product imformation with order detail, store in cart also store in database. 
 
-            $cust_id = $this->ProductModel->insert_order_detail($order_detail);
-        endforeach;
-    endif;
+                    $cust_id = $this->ProductModel->insert_order_detail($order_detail);
+                endforeach;
+            endif;
 
 // After storing all imformation in database load "billing_success".
-    $this->load->view('billing_success');
-}
+            $this->load->view('billing_success');
+        
+    
+    $this->load->view('header');
+    $this->load->view('cart');        
+}   
+
 }

@@ -17,7 +17,7 @@
                 <div class="form-group">
                     <?php 
                     $email = ['name'=> 'email','id' =>'email', 'class'=>'form-control input-lg','maxlength'=> '100',
-                    'placeholder'=>'Email','type'=> 'email','tabindex'=> '3','value'=>$this->input->post('email')?$$this->input->post('email'):''];
+                    'placeholder'=>'Email','type'=> 'email','tabindex'=> '3','value'=>$this->input->post('email')?$this->input->post('email'):''];
                     echo form_label('Email', 'email', ['class'=>'sr-only']);
                     echo form_input($email);
                     ?>
