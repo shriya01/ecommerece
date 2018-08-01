@@ -1,5 +1,4 @@
 
-
 <script type="text/javascript">
 // To conform clear all data in cart.
 function clear_cart() {
@@ -51,6 +50,7 @@ return false; // cancel button
                 <tr>
                     <td>
                         <div class="col-sm-2 hidden-xs"><img style="height:100px; width:100px;" src="<?php echo base_url('uploads/').$items['image']; ?>" alt="..." /></div>
+
                     </td>
                     <td data-th="Product">
                         <h4 class="nomargin"><?php echo $items['name']; ?></h4>
