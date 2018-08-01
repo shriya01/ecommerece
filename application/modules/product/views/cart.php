@@ -1,4 +1,3 @@
-
 <script type="text/javascript">
 // To conform clear all data in cart.
 function clear_cart() {
@@ -13,7 +12,6 @@ return false; // cancel button
 <div class="container">
     <div id="text"> 
         <?php  $cart_check = $this->cart->contents();
-
 // If cart is empty, this will show below message.
         if(empty($cart_check)) {
             echo 'To add products to your shopping cart click on "Add to Cart" Button'; 
