@@ -168,6 +168,7 @@ class PaymentMethod extends MX_Controller
         $this->load->library('cart');
         $product_details = json_encode($this->cart->contents());
         $user_id = $this->session->user_id;
+        $user_email = $this->session->user_email;
         $ip_address = $_SERVER['REMOTE_ADDR'];
         $this->load->helper('form');
         $data['user_id'] = $user_id;

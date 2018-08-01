@@ -15,7 +15,7 @@ class Product extends MX_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Product_Model');
+        $this->load->model('ProductModel');
         $this->load->library(array('form_validation','session'));
         $this->load->helper(array('url','html','form','encryption'));
     }
@@ -28,7 +28,7 @@ class Product extends MX_Controller
     public function index()
     {
         $joins = array(array( 'table' => 'category', 'condition' => 'category.category_id = products.category_id', 'jointype' => 'INNER'));
-        $data['product_info'] = $this->Product_Model->get_joins('products', ['product_id','category_name','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
+        $data['product_info'] = $this->ProductModel->get_joins('products', ['product_id','category_name','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
         $data['title']="product Information";
         $this->load->view('header', $data);
         $this->load->view('productlist', $data);
@@ -51,12 +51,12 @@ class Product extends MX_Controller
             $data['title']="Update Product";
             $product_id = aes256decrypt($product_id) ;
             $joins = array(array( 'table' => 'category', 'condition' => 'category.category_id = products.category_id where product_id = \''.$product_id.'\'', 'jointype' => 'INNER'));
-            $data['product_info'] = $this->Product_Model->get_joins('products', ['product_id','product_description','products.category_id','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
+            $data['product_info'] = $this->ProductModel->get_joins('products', ['product_id','product_description','products.category_id','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
         } else {
             $data['title'] = 'Add Product';
         }
         if ($this->validateProductData($product_id) == false) {
-            $product_categories= $this->Product_Model->select(['category_id','category_name'], 'category');
+            $product_categories= $this->ProductModel->select(['category_id','category_name'], 'category');
             foreach ($product_categories as $row) {
                 $categories[$row['category_id']] = $row['category_name'];
                 # code...
@@ -81,7 +81,6 @@ class Product extends MX_Controller
                 if ($product_id=='') {
                     $table_name = "products";
                     $insert_array = [ 'product_name' => $productname,'product_description'=>$productdescription, 'product_price' => $productprice,'product_discount' => $productdiscount ,'product_selling_price'=>$productsellingprice,'category_id' => $productcategory,'product_image'=>$image_name];
-
                     $this->ProductModel->insert($table_name, $insert_array);
                     redirect('product/');
                 } else {
@@ -114,7 +113,6 @@ class Product extends MX_Controller
             return $upload_success;
         }
     }
-
     /**
     * @DateOfCreation     25-July-2018
     * @DateOfDeprecated
@@ -170,7 +168,7 @@ class Product extends MX_Controller
         if (isset($this->session->admin_email)) {
             $product_id = aes256decrypt($product_id) ;
             $joins = array(array( 'table' => 'category', 'condition' => 'category.category_id = products.category_id where product_id = \''.$product_id.'\'', 'jointype' => 'INNER'));
-            $data['product_info'] = $this->Product_Model->get_joins('products', ['product_id','category_name','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
+            $data['product_info'] = $this->ProductModel->get_joins('products', ['product_id','category_name','product_name','product_description','product_price','product_discount','product_selling_price'], $joins);
             $this->load->view('header', $data);
             $this->load->view('viewSingleProductInfo', $data);
             $this->load->view('footer');
@@ -185,12 +183,10 @@ class Product extends MX_Controller
     * @LongDescription
     * @param string $product_id [encrypted product id ]
     */
-
     public function addToCart($product_id = '')
     {
         $this->load->library('cart');
         $product_id = aes256decrypt($product_id);
-
         $product_info = $this->ProductModel->select(['product_image','product_name','product_selling_price'], 'products', ['product_id'=>$product_id]);
         foreach ($product_info as $key) {
             $product_name = $key['product_name'];
@@ -207,8 +203,48 @@ class Product extends MX_Controller
         $this->load->view('header');
         $this->load->view('cart', $data);
     }
-
-
+            function billing_view(){
+            $this->load->library('cart');
+// Load "billing_view".
+            $this->load->view('header');
+            $this->load->view('product/billing_view');
+        }
+        public function save_order()
+        {
+            $this->load->library('cart');
+// This will store all values which inserted  from user.
+            $user = array(
+                'user_firstname'      => $this->input->post('name'),
+                'user_email'     => $this->input->post('email'),
+                'user_address'   => $this->input->post('address'),
+                'user_mobile'     => $this->input->post('phone')
+            );      
+// And store user imformation in database.
+            $user_id = $this->ProductModel->insert_user($user);
+            $order = array(
+                'date'          => date('Y-m-d'),
+                'user_id'    => $user_id
+            );      
+            $ord_id = $this->ProductModel->insert_order($order);
+            if ($cart = $this->cart->contents()):
+                foreach ($cart as $item):
+                    $order_detail = array(
+                        'orderid'       => $ord_id,
+                        'product_id'     => $item['id'],
+                        'quantity'      => $item['qty'],
+                        'price'         => $item['price']
+                    );      
+// Insert product imformation with order detail, store in cart also store in database. 
+                    $cust_id = $this->ProductModel->insert_order_detail($order_detail);
+                endforeach;
+            endif;
+// After storing all imformation in database load "billing_success".
+            $this->load->view('billing_success');
+        
+    
+    $this->load->view('header');
+    $this->load->view('cart');        
+}   
     /**
     * @DateOfCreation     25-July-2018
     * @DateOfDeprecated
@@ -249,7 +285,6 @@ class Product extends MX_Controller
         if (isset($_POST['cart'])) {
             // Recieve post values,calcute them and update
             $cart_info =  $_POST['cart'] ;
-
             foreach ($cart_info as $id => $cart) {
                 $rowid = $cart['rowid'];
                 $price = $cart['price'];
