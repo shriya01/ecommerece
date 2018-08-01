@@ -1,6 +1,6 @@
 <?php 
 /**
- * PaymentMethod_Model Class
+ * Product_Model Class
  *
  * @package
  * @subpackage
@@ -10,7 +10,6 @@
  * @ShortDescription
  * @LongDescription   Inherits all properties and methods specified in MY_Model class
  */
-class PaymentMethod_Model extends MY_Model
+class Product_Model extends MY_Model
 {
-	
 }

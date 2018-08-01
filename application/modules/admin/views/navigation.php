@@ -28,6 +28,13 @@
                         </ul>
                     </li>
                     <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Category <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="<?php echo base_url('category/addOrUpdateCategory'); ?>">Add Category</a></li>
+                            <li><a href="<?php echo base_url('category'); ?>">View All Categories</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Orders <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#">View All Orders</a></li>

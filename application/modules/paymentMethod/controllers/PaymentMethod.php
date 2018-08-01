@@ -1,4 +1,15 @@
 <?php
+/**
+ * PaymentMethod Class
+ *
+ * @package
+ * @subpackage
+ * @category
+ * @DateOfCreation    25-July-2018
+ * @DateOfDeprecated
+ * @ShortDescription
+ * @LongDescription   This class implement the payment method CRUD and chekout functionality
+ */
 class PaymentMethod extends MX_Controller
 {
     public function __construct()
@@ -9,9 +20,10 @@ class PaymentMethod extends MX_Controller
         $this->load->library('cart');
     }
     /**
-    * [index description]
-    * @return [type] [description]
-    */
+     * @DateOfCreation     25-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   This function displays all available payment method with edit,delete and view link
+     */
     public function index()
     {
         $table_name = "payment_method";
@@ -23,9 +35,12 @@ class PaymentMethod extends MX_Controller
         $this->load->view('PaymentMethodList', $data);
     }
     /**
-    * [AddOrUpdatePaymentMethod description]
-    * @param string $payment_method_id [description]
-    */
+     * @DateOfCreation     1-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Display form for updating data if id availble otherwise form for data insertion is displayed
+     * @LongDescription
+     * @param string $payment_method_id [encrypted payment method id ]
+     */
     public function AddOrUpdatePaymentMethod($payment_method_id = '')
     {
         $data['payment_method_id'] = $payment_method_id;
@@ -62,13 +77,13 @@ class PaymentMethod extends MX_Controller
         }
     }
     /**
-    * @DateOfCreation     1-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   Validate the category form
-    * @LongDescription
-    * @param  string $user_id [User Encrypted Id]
-    * @return [boolean]       [true or false]
-    */
+     * @DateOfCreation     1-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Validate the payment method form
+     * @LongDescription
+     * @param  string $payment_method_id [ Encrypted Payment Method Id]
+     * @return [boolean]       [true or false]
+     */
     public function validatePaymentMethodData($payment_method_id)
     {
         $this->load->library('form_validation');
@@ -80,10 +95,12 @@ class PaymentMethod extends MX_Controller
         }
     }
     /**
-    * [validateCheckOutData description]
-    * @return [type] [description]
-    */
-
+     * @DateOfCreation     1-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Validate the checkout data
+     * @LongDescription
+     * @return [boolean]       [true or false]
+     */
     public function validateCheckOutData()
     {
         $this->load->library('form_validation');
@@ -92,7 +109,7 @@ class PaymentMethod extends MX_Controller
         $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required');
         $this->form_validation->set_rules('city', 'city', 'trim|required');
         $this->form_validation->set_rules('state', 'state', 'trim|required');
-                $this->form_validation->set_rules('address', 'address', 'trim|required');
+        $this->form_validation->set_rules('address', 'address', 'trim|required');
 
         $this->form_validation->set_rules('zip_code', 'zip code', 'trim|required');
         $this->form_validation->set_rules('mobile_number', 'phone number', 'trim|required');
@@ -109,9 +126,12 @@ class PaymentMethod extends MX_Controller
         }
     }
     /**
-    * [DeletePaymentMethodData description]
-    * @param [type] $payment_method_id [description]
-    */
+     * @DateOfCreation     1-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Delete the payment method data
+     * @LongDescription
+     * @param  string $payment_method_id [ Encrypted Payment Method Id]
+     */
     public function DeletePaymentMethodData($payment_method_id)
     {
         $table_name = "payment_method";
@@ -120,12 +140,12 @@ class PaymentMethod extends MX_Controller
         redirect('paymentMethod/');
     }
     /**
-    * @DateOfCreation     1-July-2018
-    * @DateOfDeprecated
-    * @ShortDescription   Show product from the database of the product id specified
-    * @LongDescription
-    * @param string $product_id
-    */
+     * @DateOfCreation     1-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Show the payment method data
+     * @LongDescription
+     * @param  string $payment_method_id [ Encrypted Payment Method Id]
+     */
     public function ShowPaymentMethodData($payment_method_id = '')
     {
         $array = array('payment_method_id','payment_method_name');
@@ -137,10 +157,12 @@ class PaymentMethod extends MX_Controller
         $this->load->view('footer');
     }
     /**
-    * [CheckOut description]
-    * @param string $user_id [description]
-    */
-    public function CheckOut($user_id = '')
+     * @DateOfCreation     1-July-2018
+     * @DateOfDeprecated
+     * @ShortDescription   Display the checkout form
+     * @LongDescription
+     */
+    public function CheckOut()
     {
         $this->load->library('cart');
         $product_details = json_encode($this->cart->contents());
@@ -199,7 +221,6 @@ class PaymentMethod extends MX_Controller
                 $this->load->view('header');
                 echo "<div class='alert alert-success'>Your Order Has Been Placed</div>";
             }
-        }        
-       
+        }
     }
 }
