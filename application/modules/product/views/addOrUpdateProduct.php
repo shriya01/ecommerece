@@ -118,18 +118,7 @@
                 <?php echo form_upload('product_image');?> 
 
        
-			<hr>
-			<div class="row">
-				<div class="col-xs-12 col-md-3">
-					<?php 
-                    echo form_submit('updateUser', 'SAVE','value="upload"', array('class'=>'btn btn-primary btn-lg','tabindex'=>'7'));
-                    ?>
-				</div>
-			</div>
-			<?php echo form_close(); ?>
-		</div>
-	</div>
-</div>
+
                 <hr />
                 <div class="row">
                     <div class="col-xs-12 col-md-3">
