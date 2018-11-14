@@ -77,6 +77,8 @@ class Product extends MX_Controller
             if ($upload_result == false) {
                 echo "there is some error in file uplad";
             } else {
+              
+                
                 $image_name = $upload_result['upload_data']['file_name'];
                 if ($product_id=='') {
                     $table_name = "products";
@@ -107,7 +109,7 @@ class Product extends MX_Controller
         $this->load->library('upload', $config);
         if (! $this->upload->do_upload('product_image')) {
             $upload_error = array('error' => $this->upload->display_errors());
-            return $data;
+            return $upload_error;
         } else {
             $upload_success = array('upload_data' => $this->upload->data());
             return $upload_success;

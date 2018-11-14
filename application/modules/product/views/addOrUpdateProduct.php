@@ -114,11 +114,7 @@
                     echo form_dropdown('category_name', $product_categories,$selected,$js);
                     ?>
                 </div>
-
-                <?php echo form_upload('product_image');?> 
-
-       
-
+                <?php echo form_upload('product_image');?>
                 <hr />
                 <div class="row">
                     <div class="col-xs-12 col-md-3">
@@ -131,5 +127,4 @@
             </div>
         </div>
     </div>
-
 </section>
